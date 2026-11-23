@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HomeFix Uganda</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="HomeFix Uganda: marketplace prototype for verified property technicians. Fictitious data and sandbox payments only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: sticky top bar, content column up to 1080px, bottom tab bar on phones. Teal for trust, amber for action. */
+:root{--bg:#F3F7F6;--surface:#FFFFFF;--ink:#10302E;--muted:#516B68;--line:#D9E4E2;--brand:#0E5C5A;--on-brand:#FFFFFF;--tint:#E3F0EE;--accent:#EBA73F;--on-accent:#2F1E00;--good:#17794F;--good-bg:#DFF2E8;--warn:#85500A;--warn-bg:#FBEED2;--bad:#B5301F;--bad-bg:#FBE4E0;--focus:#1B6EF3;--hero-bg:#0A4745;--hero-ink:#FFFFFF;--sh:0 1px 2px rgba(16,48,46,.06),0 6px 20px rgba(16,48,46,.06);--f-head:'Space Grotesk',system-ui,sans-serif;--f-body:'Inter',system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1816;--surface:#132523;--ink:#E6F2F0;--muted:#9DB5B1;--line:#25403C;--brand:#4DB6AC;--on-brand:#06201D;--tint:#183533;--accent:#F0B54F;--on-accent:#2B1B00;--good:#5FD39A;--good-bg:#12372A;--warn:#F2B25A;--warn-bg:#3A2A0C;--bad:#FF8A78;--bad-bg:#40201B;--focus:#7FB0FF;--hero-bg:#0F3A38;--sh:none;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1816;--surface:#132523;--ink:#E6F2F0;--muted:#9DB5B1;--line:#25403C;--brand:#4DB6AC;--on-brand:#06201D;--tint:#183533;--accent:#F0B54F;--on-accent:#2B1B00;--good:#5FD39A;--good-bg:#12372A;--warn:#F2B25A;--warn-bg:#3A2A0C;--bad:#FF8A78;--bad-bg:#40201B;--focus:#7FB0FF;--hero-bg:#0F3A38;--sh:none;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+h1,h2,h3{font-family:var(--f-head);line-height:1.15;margin:0 0 .5em;text-wrap:balance}
+h1{font-size:clamp(28px,5vw,44px);font-weight:700}h2{font-size:clamp(21px,3vw,28px);font-weight:700}h3{font-size:17px;font-weight:700}
+p{margin:0 0 .8em}a{color:var(--brand)}small,.muted{color:var(--muted)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);padding:8px 12px;z-index:50;border:1px solid var(--line)}.skip:focus{left:8px}
+/* top bar */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:60px}
+.brand{display:flex;align-items:center;gap:8px;font:700 19px var(--f-head);color:var(--ink);text-decoration:none;white-space:nowrap}
+.brand svg{width:26px;height:26px;color:var(--brand)}
+nav.main{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+nav.main a{display:flex;align-items:center;gap:6px;padding:9px 12px;border-radius:8px;color:var(--muted);text-decoration:none;font-weight:500;min-height:44px}
+nav.main a:hover{background:var(--tint);color:var(--ink)}nav.main a[aria-current="page"]{background:var(--tint);color:var(--brand);font-weight:600}
+.who{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.who b{color:var(--ink)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px var(--f-body);cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--brand)}
+.btn.primary{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.btn.accent{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.sm{min-height:36px;padding:0 12px;font-size:13px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+/* hero */
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;opacity:.8;margin-bottom:12px}
+.hero2{background:var(--hero-bg);color:var(--hero-ink);padding-block:56px 64px}
+.hero2 .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.hero2 h1{color:#fff}.hero2 .lead{font-size:18px;opacity:.92;max-width:54ch}
+.hero-art svg{width:100%;height:auto;display:block}
+.searchbar{background:var(--surface);color:var(--ink);border-radius:14px;padding:12px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin:22px 0 16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.searchbar .field{margin:0}.searchbar label{font-size:12px;color:var(--muted)}
+.ticks{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:14px}
+.ticks li::before{content:"\2713";color:var(--accent);font-weight:700;margin-right:8px}
+.btn.ghost{background:transparent;color:var(--hero-ink);border-color:rgba(255,255,255,.5)}
+.phead{background:var(--hero-bg);color:var(--hero-ink);padding-block:44px}
+.phead h1{color:#fff;margin-bottom:.3em}.phead .lead{margin:0;font-size:17px;opacity:.9;max-width:62ch}
+.strip{background:var(--surface);border-bottom:1px solid var(--line)}
+.strip .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;padding-block:22px;text-align:center}
+.strip b{display:block;font:700 26px var(--f-head);color:var(--brand)}.strip span{font-size:13px;color:var(--muted)}
+.band{padding-block:60px}.band.alt{background:var(--surface);border-block:1px solid var(--line)}
+.sec-head{max-width:640px;margin:0 auto 28px;text-align:center}.sec-head p{color:var(--muted);margin:0}
+.feat p{margin:0;color:var(--muted)}.feat .ico{margin-bottom:12px}
+.quote blockquote{margin:8px 0 14px;font-size:16px}.quote figcaption{font-size:14px}.stars-row{color:var(--accent);letter-spacing:2px}
+.cta{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.cta .card{padding:30px}
+.card.brandbg{background:var(--hero-bg);color:#fff;border-color:transparent}.card.brandbg h2{color:#fff}
+details.faq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.faq summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.faq summary::-webkit-details-marker{display:none}
+details.faq summary::after{content:"+";font-size:20px;color:var(--brand)}details.faq[open] summary::after{content:"\2212"}
+details.faq p{padding:0 16px 14px;margin:0;color:var(--muted)}
+.prose{max-width:760px}.prose h2{font-size:20px;margin-top:26px}.prose li{margin-bottom:6px}
+.auth{max-width:460px;margin:0 auto}
+.two-opt{display:grid;grid-template-columns:1fr 1fr;gap:10px}.two-opt .opt{margin:0}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400}
+.pagepad{padding-block:32px 64px}
+/* generic blocks */
+main{display:block;min-height:60vh}main:focus{outline:none}
+section.block{margin-block:36px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--sh);min-width:0}
+.card.flat{box-shadow:none}
+.cat{display:flex;gap:12px;align-items:center;text-align:left;width:100%;cursor:pointer;font:600 16px var(--f-body);color:var(--ink)}
+.ico{width:44px;height:44px;border-radius:12px;background:var(--tint);color:var(--brand);display:grid;place-items:center;flex:none}
+.ico svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.steps{counter-reset:s;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));padding:0;list-style:none;margin:0}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 16px 16px 60px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:16px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 15px var(--f-head);display:grid;place-items:center}
+.pkg h3{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.pkg .for{color:var(--muted);font-size:13px;margin-bottom:8px}
+.pkg .price{font:700 15px var(--f-head);color:var(--brand)}
+.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font:700 16px var(--f-head);color:#fff;flex:none}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--good-bg);color:var(--good)}
+.badge.n{background:var(--tint);color:var(--muted)}
+.chip{display:inline-block;font-size:12px;padding:3px 10px;border-radius:99px;background:var(--tint);color:var(--ink);margin:0 4px 4px 0}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--tint);color:var(--brand);white-space:nowrap}
+.pill.quoted,.pill.in_progress,.pill.open,.pill.pending{background:var(--warn-bg);color:var(--warn)}
+.pill.completed,.pill.approved,.pill.active,.pill.resolved,.pill.paid{background:var(--good-bg);color:var(--good)}
+.pill.declined,.pill.rejected{background:var(--bad-bg);color:var(--bad)}
+.tc{display:flex;gap:12px;align-items:flex-start}
+.tc h3{margin:0}.tc .meta{font-size:13px;color:var(--muted)}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat b{display:block;font:700 22px var(--f-head);font-variant-numeric:tabular-nums}.stat span{font-size:13px;color:var(--muted)}
+/* forms */
+.field{display:grid;gap:5px;margin-bottom:14px}
+label,legend{font-weight:600;font-size:14px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;width:100%}
+input[type=radio],input[type=checkbox]{width:auto;min-height:0}
+textarea{min-height:96px;resize:vertical}
+[aria-invalid="true"]{border-color:var(--bad)}
+.err{color:var(--bad);font-size:13px;min-height:0}.err:empty{display:none}
+.hint{color:var(--muted);font-size:12px}
+fieldset{border:0;padding:0;margin:0 0 12px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface);cursor:pointer;font-weight:400}
+.opt:has(input:checked){border-color:var(--brand);background:var(--tint)}
+.filters{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));align-items:end}
+.filters .field{margin:0}
+.stars{display:flex;gap:6px;flex-wrap:wrap}.stars label{display:flex;gap:4px;align-items:center;font-weight:500}
+.banner{border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;background:var(--warn-bg);color:var(--warn);border:1px solid transparent}
+.banner.info{background:var(--tint);color:var(--ink)}.banner.bad{background:var(--bad-bg);color:var(--bad)}.banner.good{background:var(--good-bg);color:var(--good)}
+/* tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+/* timeline */
+.tl{display:flex;gap:0;margin:0 0 20px;padding:0;list-style:none;overflow-x:auto}
+.tl li{flex:1;min-width:92px;text-align:center;font-size:12px;color:var(--muted);position:relative;padding-top:26px}
+.tl li::before{content:"";position:absolute;top:6px;left:50%;width:14px;height:14px;border-radius:50%;background:var(--line);transform:translateX(-50%);z-index:1}
+.tl li::after{content:"";position:absolute;top:12px;left:-50%;width:100%;height:2px;background:var(--line)}
+.tl li:first-child::after{display:none}
+.tl li.done{color:var(--ink)}.tl li.done::before,.tl li.done::after{background:var(--brand)}
+.tl li.now{font-weight:700;color:var(--brand)}.tl li.now::before{box-shadow:0 0 0 4px var(--tint)}
+/* chat */
+.chat{display:grid;gap:8px;max-height:280px;overflow:auto;margin-bottom:12px;padding:4px}
+.msg{max-width:82%;padding:8px 12px;border-radius:12px;background:var(--tint);font-size:14px}
+.msg.mine{margin-left:auto;background:var(--brand);color:var(--on-brand)}.msg small{display:block;opacity:.75;font-size:11px}
+.msg.mine small{color:inherit}
+/* portfolio */
+.port{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.tile{border-radius:12px;padding:12px;min-height:96px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;font-size:13px;font-weight:600;background:linear-gradient(160deg,var(--c1),var(--c2))}
+.tile small{color:rgba(255,255,255,.85);font-weight:400}
+/* bars */
+.bars{display:flex;align-items:flex-end;gap:10px;height:120px;padding-top:8px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--muted)}
+.bar i{display:block;width:100%;background:var(--brand);border-radius:6px 6px 0 0;min-height:2px}
+/* toasts */
+#toasts{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;z-index:60;max-width:min(360px,calc(100vw - 32px))}
+.toast{background:var(--ink);color:var(--bg);padding:12px 14px;border-radius:10px;font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.toast.bad{background:var(--bad);color:#fff}.toast.good{background:var(--good);color:#fff}
+footer.foot{background:var(--hero-bg);color:#CFE3E0;padding-block:48px 24px;font-size:14px}
+.fcols{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:32px}
+.fcols h4{color:#fff;font:700 14px var(--f-head);margin:0 0 10px}
+.fcols a{display:block;color:#CFE3E0;text-decoration:none;padding:5px 0}.fcols a:hover{color:#fff;text-decoration:underline}
+.fcols p{margin:0 0 8px}.foot .brand{color:#fff;margin-bottom:10px}.foot .brand svg{color:var(--accent)}
+.fbot{border-top:1px solid rgba(255,255,255,.18);margin-top:32px;padding-top:16px;display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;align-items:center;font-size:13px}
+.fbot .btn{background:transparent;color:#CFE3E0;border-color:rgba(255,255,255,.35)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 12px;font-size:14px}.kv dt{color:var(--muted)}.kv dd{margin:0}
+.split{display:grid;gap:20px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+@media (max-width:860px){.hero2 .wrap,.split{grid-template-columns:1fr}.hero-art{display:none}.fcols{grid-template-columns:1fr 1fr}.band{padding-block:44px}}
+.s{display:none}
+@media (max-width:760px){
+ body{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+ nav.main{position:fixed;left:0;right:0;bottom:0;margin:0;background:var(--surface);border-top:1px solid var(--line);justify-content:space-around;flex-wrap:nowrap;padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px));z-index:25}
+ nav.main a{flex:1;justify-content:center;font-size:12px;padding:6px 2px;text-align:center}
+ .who .uname{display:none}.l{display:none}.s{display:inline}.searchbar{grid-template-columns:1fr}.ticks{grid-template-columns:1fr}.two-opt{grid-template-columns:1fr}.fcols{grid-template-columns:1fr}.hero2{padding-block:36px 44px}
+ #toasts{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<button class="skip" type="button" id="skip">Skip to content</button>
+<header class="top"><div class="wrap" id="topbar"></div></header>
+<main id="main" tabindex="-1"><div id="app"></div></main>
+<footer class="foot"><div class="wrap">
+ <div class="fcols">
+  <div><a class="brand" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>HomeFix Uganda</a>
+   <p>Trusted professionals. Better maintained properties.</p><p>Serving Kampala, Wakiso and Mukono.</p><p>hello@homefix.example<br>+256 700 000 000</p></div>
+  <div><h4>Customers</h4><a href="#search">Find a technician</a><a href="#how">How it works</a><a href="#plans">Pricing</a><a href="#register">Create account</a></div>
+  <div><h4>Technicians</h4><a href="#pros">Why join HomeFix</a><a href="#register" data-act="join-tech">Apply as a technician</a><a href="#login">Sign in</a></div>
+  <div><h4>Company</h4><a href="#about">About us</a><a href="#help">Help centre</a><a href="#contact">Contact</a><a href="#terms">Terms of use</a><a href="#privacy">Privacy policy</a></div>
+ </div>
+ <div class="fbot"><span>&copy; 2026 HomeFix Uganda. Prototype: fictitious data and sandbox payments only.</span><button class="btn sm" type="button" data-act="reset">Reset demo data</button></div>
+</div></footer>
+<div id="toasts" aria-live="polite" role="status"></div>
+<script>
+(function(){
+'use strict';
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const UGX=n=>'UGX '+Math.round(n).toLocaleString('en-US');
+const pad=n=>String(n).padStart(2,'0');
+const localISO=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const addDays=(n,from)=>{const d=from?new Date(from):new Date();d.setDate(d.getDate()+n);return localISO(d);};
+const todayISO=()=>localISO(new Date());
+const fmtDate=s=>{if(!s)return '-';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});};
+const fmtTS=t=>new Date(t).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+const uid=p=>p+Math.random().toString(36).slice(2,7);
+const okPhone=s=>/^\+256[37]\d{8}$/.test(String(s).replace(/\s/g,''));
+const EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const ICON={
+ plumbing:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+ electrical:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+ carpentry:'<path d="M3 21 21 3M7 21l-4-4M11 17l-2-2M15 13l-2-2M19 9l-2-2"/>',
+ painting:'<rect x="4" y="3" width="14" height="6" rx="1"/><path d="M18 6h2v5h-9v4"/><rect x="9" y="15" width="4" height="6" rx="1"/>',
+ appliance:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M6 10h12M9 6v1M9 13v3"/>',
+ ac:'<rect x="3" y="5" width="18" height="8" rx="2"/><path d="M7 17v3M12 17v3M17 17v3"/>',
+ shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+ doc:'<path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/>',
+ wallet:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>',
+ star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+ grid:'<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ users:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.5 3-6 6-6s6 2.5 6 6M17 11a3 3 0 1 0 0-6M21 20c0-2.5-1.5-4.5-4-5.5"/>',
+ building:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/>',
+ home:'<path d="M3 11 12 3l9 8v10H3z"/><path d="M9 21v-6h6v6"/>',
+ bed:'<path d="M3 18V8M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6"/>',
+ briefcase:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 13h18"/>'};
+const svg=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg>`;
+const CATS={plumbing:'Plumbing',electrical:'Electrical',carpentry:'Carpentry',painting:'Painting',appliance:'Appliance repair',ac:'AC install & service'};
+const LOCS=['Kampala','Wakiso','Mukono'];
+const PTYPES=['Home','Rental unit','Airbnb','Hotel','Commercial'];
+const FREQ={'Weekly':7,'Monthly':30,'Every 3 months':91,'Yearly':365};
+const STATUS={requested:'Requested',quoted:'Quoted',approved:'Approved',in_progress:'In progress',completed:'Completed',declined:'Declined'};
+const ORDER=['requested','quoted','approved','in_progress','completed'];
+const FEE=0.10;
+const PLANS=[
+ {id:'QuickFix',name:'QuickFix',who:'One-time repairs and installations',price:'Pay per job',desc:'Verified technician, written quote, sandbox mobile-money payment, 90-day workmanship warranty.'},
+ {id:'HomeCare',name:'HomeCare',who:'Homeowners',price:'Monthly or annual plan',desc:'Scheduled maintenance, reminders, digital records and priority booking.'},
+ {id:'PropertyCare',name:'PropertyCare',who:'Landlords and managers with several rental units',price:'Per-unit plan',desc:'Multi-property dashboard, expense tracking and recurring unit inspections.'},
+ {id:'BusinessCare',name:'BusinessCare',who:'Hotels, Airbnb, B&Bs and commercial sites',price:'Custom contract',desc:'Recurring maintenance, guest-turnaround visits and a dedicated account manager.'}];
+const PORT={plumbing:['Kitchen sink repair','Bathroom re-pipe','Water tank hook-up','Pump fitting'],electrical:['Socket rewiring','DB board upgrade','Security lighting','Solar inverter wiring'],carpentry:['Built-in wardrobe','Roof truss repair','Kitchen cabinets','Door frames'],painting:['Two-bedroom repaint','Exterior wall coat','Office interior','Guesthouse refresh'],appliance:['Fridge compressor','Washing machine','Cooker repair','Water heater'],ac:['Split unit install','Quarterly servicing','Gas refill','Hotel corridor units']};
+const COLORS=[['#0E5C5A','#2E8B87'],['#9A5B13','#D08A2E'],['#3B5B8C','#5C86C0'],['#6B3E7D','#9A62AD']];
+
+/* ---------- state ---------- */
+const SHA=(()=>{const K=[],H0=[];let n=0;for(let c=2;n<64;c++){let pr=true;for(let d=2;d*d<=c;d++)if(c%d===0){pr=false;break;}if(pr){K[n]=(Math.cbrt(c)%1)*4294967296|0;if(n<8)H0[n]=(Math.sqrt(c)%1)*4294967296|0;n++;}}
+ return str=>{const by=unescape(encodeURIComponent(str)),l=by.length,nw=(((l+8)>>6)+1)*16,w=new Array(nw).fill(0);
+  for(let i=0;i<l;i++)w[i>>2]|=by.charCodeAt(i)<<(24-(i%4)*8);
+  w[l>>2]|=0x80<<(24-(l%4)*8);w[nw-1]=l*8;
+  const h=H0.slice(),rr=(v,a)=>(v>>>a)|(v<<(32-a));
+  for(let j=0;j<nw;j+=16){const x=w.slice(j,j+16);
+   for(let i=16;i<64;i++){const a=x[i-15],c=x[i-2];x[i]=(x[i-16]+(rr(a,7)^rr(a,18)^(a>>>3))+x[i-7]+(rr(c,17)^rr(c,19)^(c>>>10)))|0;}
+   let [a,b,c,d,e,f,g,hh]=h;
+   for(let i=0;i<64;i++){const t1=(hh+(rr(e,6)^rr(e,11)^rr(e,25))+((e&f)^(~e&g))+K[i]+x[i])|0,t2=((rr(a,2)^rr(a,13)^rr(a,22))+((a&b)^(a&c)^(b&c)))|0;hh=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
+   h[0]=(h[0]+a)|0;h[1]=(h[1]+b)|0;h[2]=(h[2]+c)|0;h[3]=(h[3]+d)|0;h[4]=(h[4]+e)|0;h[5]=(h[5]+f)|0;h[6]=(h[6]+g)|0;h[7]=(h[7]+hh)|0;}
+  return h.map(v=>('00000000'+(v>>>0).toString(16)).slice(-8)).join('');};})();
+const pwHash=(email,pw)=>SHA('homefix|'+String(email).trim().toLowerCase()+'|'+pw);
+const KEY='homefix_demo_v3';
+function seed(){
+ const T=(id,name,cat,loc,area,rating,jobs,cert,skills,today,bio)=>({id,name,cat,loc,area,rating,jobs,cert,skills,today,bio,status:'verified',serves:[]});
+ const techs=[
+  T('t1','Moses Okello','plumbing','Kampala','Ntinda',4.8,42,true,['Leak repair','Pipe fitting','Drain clearing','Water heaters'],true,'Plumber for homes and rental blocks in Ntinda, Naguru and Bugolobi.'),
+  T('t2','Sarah Nabirye','plumbing','Wakiso','Kira',4.6,31,true,['Bathroom fitting','Septic and tanks','Pump installs'],false,'Kira-based plumber focused on bathrooms and water tanks.'),
+  T('t3','Ronald Ssemwogerere','electrical','Kampala','Kololo',4.7,58,true,['Rewiring','DB boards','Lighting','Backup power'],true,'Licensed electrician for homes, offices and guesthouses.'),
+  T('t4','Brenda Atuhaire','electrical','Wakiso','Gayaza',4.5,24,false,['Sockets','Security lights','Solar wiring'],true,'Wakiso electrician for guesthouses and family homes.'),
+  T('t5','Joseph Mukasa','carpentry','Mukono','Seeta',4.6,37,true,['Wardrobes','Roofing timber','Doors and frames'],false,'Carpenter building fitted wardrobes and kitchens.'),
+  T('t6','Peter Kiiza','carpentry','Mukono','Mukono Town',4.4,19,false,['Furniture repair','Cabinets','Decking'],true,'Furniture repair and custom joinery.'),
+  T('t7','Esther Akello','painting','Kampala','Muyenga',4.9,63,true,['Interior paint','Exterior coats','Texture finishes'],true,'Painting crew lead for apartments and offices.'),
+  T('t8','Hassan Kato','painting','Mukono','Goma',4.3,15,false,['Interior paint','Waterproofing'],false,'Mukono painter, waterproofing specialist.'),
+  T('t9','Daniel Opolot','appliance','Kampala','Bukoto',4.7,45,true,['Fridges','Washing machines','Cookers'],true,'Appliance repair with 8 years of workshop experience.'),
+  T('t10','Mary Nankya','appliance','Wakiso','Najjera',4.5,28,false,['Water heaters','Microwaves','Blenders'],true,'Small appliance and water heater repair.'),
+  T('t11','Isaac Byaruhanga','ac','Kampala','Kololo',4.8,51,true,['Split unit install','Servicing','Gas refill'],true,'AC installer serving hotels and offices.'),
+  T('t12','Lillian Auma','ac','Wakiso','Nansana',4.6,22,true,['Servicing','Repairs','Duct cleaning'],false,'AC maintenance for Airbnb and guesthouse owners.')];
+ techs.forEach((t,k)=>t.serves=PTYPES.filter((p,i)=>(i+k)%5!==4));
+ const now=Date.now();
+ const q=(l,m,n)=>({labour:l,materials:m,note:n});
+ const J=o=>Object.assign({custId:'u1',recurring:null,photo:'',time:'09:00',phone:'+256 772 000 111',quote:null,paid:false,receipt:null,review:false,created:now-864e5},o);
+ const jobs=[
+  J({id:'j1',techId:'t1',propId:'p1',cat:'plumbing',title:'Leaking kitchen pipe under the sink',desc:'Water drips under the kitchen sink when the tap runs. The cabinet floor is wet.',date:addDays(3),time:'10:00',status:'requested'}),
+  J({id:'j2',techId:'t1',propId:'p2',cat:'plumbing',title:'Blocked bathroom drain',desc:'Bathroom floor drain is blocked and smells.',date:addDays(2),status:'quoted',quote:q(60000,25000,'Clear drain, replace trap and two fittings.')}),
+  J({id:'j3',techId:'t3',propId:'p3',cat:'electrical',title:'Rewire sockets and lights in guest room',desc:'Two sockets are dead and the ceiling light flickers.',date:addDays(-1),status:'in_progress',quote:q(180000,95000,'New circuit, 4 sockets, LED fittings.')}),
+  J({id:'j4',techId:'t11',propId:'p1',cat:'ac',title:'AC servicing (2 split units)',desc:'Routine servicing of two bedroom units, gas check.',date:addDays(-3),status:'completed',completedAt:addDays(-2),quote:q(120000,30000,'Clean filters and coils, gas check.'),recurring:{freq:'Every 3 months'}}),
+  J({id:'j5',techId:'t7',propId:'p2',cat:'painting',title:'Repaint two bedrooms',desc:'Repaint two bedrooms in the rental unit before new tenants.',date:addDays(-14),status:'completed',completedAt:addDays(-9),paid:true,review:true,quote:q(350000,420000,'Two coats, primer, paint included.'),receipt:{id:'RCT-48213',method:'MTN MoMo',phone:'+256 77x xxx 111',amount:770000,fee:77000,ts:now-9*864e5}}),
+  J({id:'j6',techId:'t9',propId:'p1',cat:'appliance',title:'Fridge not cooling',desc:'Fridge runs but food is warm.',date:addDays(-80),status:'completed',completedAt:addDays(-75),paid:true,review:true,quote:q(70000,55000,'New thermostat and gas top-up.'),receipt:{id:'RCT-31877',method:'Airtel Money',phone:'+256 75x xxx 111',amount:125000,fee:12500,ts:now-75*864e5}})];
+ const rv=(id,techId,name,rating,comment,d)=>({id,techId,name,rating,comment,date:addDays(d)});
+ const reviews=[
+  rv('r1','t1','Patrick M.',5,'Fixed the leak in under an hour and cleaned up.',-20),
+  rv('r2','t1','Joan A.',5,'Quote matched the final bill. Very clear.',-48),
+  rv('r3','t3','Brian K.',5,'Neat wiring and a certificate for the DB board.',-33),
+  rv('r4','t7','Aisha N.',5,'Bedrooms looked new. Finished a day early.',-9),
+  rv('r5','t7','Ritah S.',5,'Careful with furniture, great finish.',-60),
+  rv('r6','t9','Aisha N.',4,'Fridge works again. Arrived a little late.',-74),
+  rv('r7','t11','Hotel Lakeview',5,'Serviced 14 units with no guest disruption.',-30),
+  rv('r8','t5','Moses T.',4,'Wardrobe fits perfectly.',-41),
+  rv('r9','t2','Esther L.',5,'Bathroom fitted well and on budget.',-52),
+  rv('r10','t4','Charles O.',4,'Reliable for our lodge security lights.',-70)];
+ const now2=Date.now();
+ return {seq:1,session:null,
+  users:[
+   {id:'u1',email:'customer@homefix.demo',name:'Aisha Nakato',phone:'+256 772 000 111',role:'customer',plan:'QuickFix',hash:pwHash('customer@homefix.demo','Demo@123')},
+   {id:'u2',email:'tech@homefix.demo',name:'Moses Okello',phone:'+256 772 000 222',role:'technician',techId:'t1',hash:pwHash('tech@homefix.demo','Demo@123')},
+   {id:'u3',email:'admin@homefix.demo',name:'Grace Namubiru',phone:'',role:'admin',hash:pwHash('admin@homefix.demo','Demo@123')}],
+  techs,applicants:[
+   {id:'a1',name:'Julius Wandera',cat:'electrical',loc:'Kampala',docs:'sample-id.pdf, trade-certificate.pdf (placeholders)',submitted:addDays(-2),state:'pending'},
+   {id:'a2',name:'Faith Namugga',cat:'painting',loc:'Mukono',docs:'sample-id.pdf (placeholder)',submitted:addDays(-1),state:'pending'}],
+  props:[
+   {id:'p1',owner:'u1',name:'Kololo Family Home',type:'Home',address:'Kololo, Kampala'},
+   {id:'p2',owner:'u1',name:'Ntinda Rental Unit 4B',type:'Rental unit',address:'Ntinda, Kampala'},
+   {id:'p3',owner:'u1',name:'Namugongo Garden Airbnb',type:'Airbnb',address:'Namugongo, Wakiso'}],
+  jobs,reviews,
+  warranties:[
+   {id:'w5',jobId:'j5',propId:'p2',techId:'t7',title:'Repaint two bedrooms',start:addDays(-9),end:addDays(81)},
+   {id:'w6',jobId:'j6',propId:'p1',techId:'t9',title:'Fridge not cooling',start:addDays(-75),end:addDays(15)}],
+  claims:[
+   {id:'c1',warrantyId:'w6',by:'Aisha Nakato',reason:'Fridge stopped cooling again two weeks after the repair.',created:now2-2*864e5,state:'open'},
+   {id:'c2',warrantyId:'w5',by:'Aisha Nakato',reason:'Paint is peeling in one bedroom corner.',created:now2-864e5,state:'open'}],
+  reminders:[
+   {propId:'p1',text:'Water tank cleaning',due:addDays(20)},
+   {propId:'p2',text:'Plumbing check before new tenants',due:addDays(9)},
+   {propId:'p3',text:'Generator service',due:addDays(30)}],
+  chat:{
+   j2:[{role:'technician',name:'Moses Okello',text:'Hello Aisha, I inspected the drain. My quote is ready for your approval.',ts:now-5e6},{role:'customer',name:'Aisha Nakato',text:'Thanks Moses. Can you also check the shower pipe?',ts:now-4e6}],
+   j3:[{role:'technician',name:'Ronald Ssemwogerere',text:'Circuit is run. I will fit the lights this afternoon.',ts:now-3e6}]},
+  audit:[
+   {ts:now-864e5*3,email:'system',role:'system',action:'SEED',detail:'Fictitious demo data loaded'},
+   {ts:now-864e5*2,email:'tech@homefix.demo',role:'technician',action:'QUOTE_SENT',detail:'Job j2 quote UGX 85,000'},
+   {ts:now-864e5,email:'customer@homefix.demo',role:'customer',action:'CLAIM_FILED',detail:'Claim on warranty w5'}]};
+}
+let S;
+function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o&&o.users&&o.jobs&&o.users[0]&&o.users[0].hash)return o;}}catch(e){}return seed();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+S=load();
+const ui={filters:{cat:'',loc:'',min:'0',ptype:''},draft:null,prop:'p1',next:null};
+const user=id=>S.users.find(u=>u.id===id);
+const myProps=()=>{const u=S.session?S.users.find(x=>x.id===S.session):null;return u?S.props.filter(p=>p.owner===u.id):[];};
+const me=()=>S.session?user(S.session):null;
+const tech=id=>S.techs.find(t=>t.id===id);
+const prop=id=>S.props.find(p=>p.id===id);
+const job=id=>S.jobs.find(j=>j.id===id);
+const total=j=>j.quote?j.quote.labour+j.quote.materials:0;
+function audit(action,detail){const u=me();S.audit.unshift({ts:Date.now(),email:u?u.email:'guest',role:u?u.role:'guest',action,detail:detail||''});S.audit=S.audit.slice(0,300);save();}
+function toast(msg,type){const n=document.createElement('div');n.className='toast '+(type||'');n.textContent=msg;$('#toasts').appendChild(n);setTimeout(()=>n.remove(),4200);}
+const initials=n=>n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+const avatar=(n,k)=>`<span class="avatar" style="background:${COLORS[(k||n.length)%4][0]}" aria-hidden="true">${esc(initials(n))}</span>`;
+const pill=s=>`<span class="pill ${s}">${esc(STATUS[s]||s)}</span>`;
+function homeOf(u){return u.role==='customer'?'search':u.role==='technician'?'technician':'admin';}
+function nextVisit(j){if(!j.recurring||j.status!=='completed'||!j.completedAt)return null;return addDays(FREQ[j.recurring.freq]||90,j.completedAt+'T00:00:00');}
+
+/* ---------- form builders ---------- */
+const inp=o=>`<div class="field"><label for="${o.id||o.name}">${o.label}</label><input id="${o.id||o.name}" name="${o.name}" type="${o.type||'text'}" value="${esc(o.value||'')}" ${o.attrs||''} aria-describedby="${o.name}-err">${o.hint?`<small class="hint">${o.hint}</small>`:''}<div class="err" id="${o.name}-err" data-err="${o.name}" role="alert"></div></div>`;
+const sel=o=>`<div class="field"><label for="${o.id||o.name}">${o.label}</label><select id="${o.id||o.name}" name="${o.name}" ${o.attrs||''} aria-describedby="${o.name}-err">${o.options.map(([v,l])=>`<option value="${esc(v)}"${String(v)===String(o.value)?' selected':''}>${esc(l)}</option>`).join('')}</select><div class="err" id="${o.name}-err" data-err="${o.name}" role="alert"></div></div>`;
+const txa=o=>`<div class="field"><label for="${o.id||o.name}">${o.label}</label><textarea id="${o.id||o.name}" name="${o.name}" ${o.attrs||''} aria-describedby="${o.name}-err">${esc(o.value||'')}</textarea><div class="err" id="${o.name}-err" data-err="${o.name}" role="alert"></div></div>`;
+function showErrs(root,errs){
+ root.querySelectorAll('[data-err]').forEach(n=>n.textContent='');
+ root.querySelectorAll('[aria-invalid]').forEach(n=>n.removeAttribute('aria-invalid'));
+ const keys=Object.keys(errs);let first=null;
+ keys.forEach(k=>{const n=root.querySelector(`[data-err="${k}"]`);if(n)n.textContent=errs[k];const i=root.querySelector(`[name="${k}"]`);if(i){i.setAttribute('aria-invalid','true');first=first||i;}});
+ if(first)first.focus();
+ if(keys.length)toast(errs[keys[0]],'bad');
+ return keys.length>0;
+}
+const fd=f=>Object.fromEntries(new FormData(f));
+
+/* ---------- guards ---------- */
+const ROUTES={home:{pub:1},login:{pub:1},register:{pub:1},forgot:{pub:1},search:{pub:1},tech:{pub:1},how:{pub:1},plans:{pub:1},about:{pub:1},help:{pub:1},contact:{pub:1},terms:{pub:1},privacy:{pub:1},pros:{pub:1},
+ booking:{roles:['customer']},jobs:{roles:['customer']},job:{roles:['customer','technician','admin']},
+ pay:{roles:['customer']},properties:{roles:['customer']},
+ technician:{roles:['technician']},admin:{roles:['admin']},adminaudit:{roles:['admin']},account:{roles:['customer','technician','admin']}};
+function guard(name,arg){
+ const r=ROUTES[name];if(!r)return {nf:1};
+ if(r.pub)return {ok:1};
+ const u=me();if(!u)return {login:1};
+ if(!r.roles.includes(u.role))return {denied:`Your ${u.role} account cannot open this page.`};
+ if(name==='job'||name==='pay'){
+  const j=job(arg);if(!j)return {nf:1};
+  const ok=(u.role==='customer'&&j.custId===u.id)||(u.role==='technician'&&j.techId===u.techId)||u.role==='admin';
+  if(!ok)return {denied:'This job belongs to another account.'};
+ }
+ return {ok:1};
+}
+function ownedJob(id,role){const u=me(),j=job(id);if(!u||!j||u.role!==role)return null;
+ if(role==='customer'&&j.custId!==u.id)return null;if(role==='technician'&&j.techId!==u.techId)return null;return j;}
+
+/* ---------- chrome ---------- */
+function topbar(){
+ const u=me();
+ const links=!u?[['search','Find a technician','Find'],['how','How it works','How'],['plans','Pricing','Pricing'],['pros','For technicians','Pros'],['about','About','About']]:
+  u.role==='customer'?[['search','Find a technician','Find'],['jobs','My jobs','Jobs'],['properties','Properties','Homes'],['plans','Pricing','Plans'],['account','Account','Account']]:
+  u.role==='technician'?[['technician','Dashboard','Dashboard'],['account','Account','Account']]:[['admin','Verification','Verify'],['adminaudit','Audit log','Audit'],['account','Account','Account']];
+ const cur=parse()[0];
+ const active=n=>(n===cur||(n==='search'&&cur==='tech')||(n==='jobs'&&(cur==='job'||cur==='pay'||cur==='booking')))?' aria-current="page"':'';
+ const hashOf=n=>n==='adminaudit'?'admin-audit':n;
+ return `<a class="brand" href="#home" aria-label="HomeFix Uganda home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON.shield}</svg>HomeFix Uganda</a>
+ <nav class="main" aria-label="Main">${links.map(([n,l,sh])=>`<a href="#${hashOf(n)}"${active(n)}><span class="l">${l}</span><span class="s">${sh}</span></a>`).join('')}</nav>
+ <div class="who">${u?`<span class="uname">${esc(u.name)} <b>${esc(u.role)}</b></span><button class="btn sm" type="button" data-act="logout">Sign out</button>`:`<a class="btn sm" href="#login">Sign in</a><a class="btn sm primary" href="#register"><span class="l">Create account</span><span class="s">Join</span></a>`}</div>`;
+}
+function parse(){const h=decodeURIComponent((location.hash||'').replace(/^#/,''));if(h==='admin-audit')return ['adminaudit',''];const i=h.indexOf('-');return i<0?[h||'home','']:[h.slice(0,i),h.slice(i+1)];}
+function go(name){if(location.hash==='#'+name)render(false);else location.hash=name;}
+
+/* ---------- pages ---------- */
+const PAGES={};
+function techCard(t){
+ return `<article class="card"><div class="tc">${avatar(t.name)}<div><h3><a href="#tech-${t.id}" style="color:inherit;text-decoration:none">${esc(t.name)}</a></h3><div class="meta">${esc(CATS[t.cat])} · ${esc(t.area)}, ${esc(t.loc)}</div></div></div>
+ <p style="margin:12px 0 8px"><span class="badge">ID verified &#10003;</span> ${t.cert?'<span class="badge">Certified &#10003;</span>':''}</p>
+ <p class="meta"><b>&#9733; ${t.rating.toFixed(1)}</b> · ${t.jobs} jobs · ${t.today?'<span style="color:var(--good);font-weight:600">Available today</span>':'Next slot tomorrow'}</p>
+ <div class="row" style="margin-top:12px"><a class="btn sm" href="#tech-${t.id}">View profile</a><button class="btn sm primary" type="button" data-act="quote" data-id="${t.id}">Request quote</button></div></article>`;
+}
+const FULL={home:1,pros:1,about:1,how:1,help:1,contact:1,terms:1,privacy:1,plans:1};
+const phead=(t,l)=>`<section class="phead"><div class="wrap"><h1>${t}</h1>${l?`<p class="lead">${l}</p>`:''}</div></section>`;
+const shell=(t,l,inner)=>phead(t,l)+`<div class="wrap pagepad">${inner}</div>`;
+const sicon=(k)=>`<span class="ico">${svg(k)}</span>`;
+const FAQ=[
+ ['How does HomeFix verify technicians?','Every technician submits their ID, trade skills and certificates where they have them. Our team reviews these before a profile appears in search. Verified profiles carry an "ID verified" badge, and "Certified" where a trade certificate is on file.'],
+ ['Do I pay before the work starts?','No. The technician inspects the problem and sends a written quote that splits labour and materials. You approve the quote first, and you pay only after the job is marked complete.'],
+ ['How do payments work?','You pay with MTN MoMo or Airtel Money and receive a digital receipt. In this prototype payments are a sandbox simulation, so no real money moves and no PIN is ever requested.'],
+ ['What does the warranty cover?','Every paid job includes a 90-day workmanship warranty. If the same fault comes back, file a claim from your property dashboard and our team reviews it with the technician.'],
+ ['Can I book recurring maintenance?','Yes. Choose "Recurring" when you book and set a frequency: weekly, monthly, every 3 months or yearly. HomeFix shows the next visit and keeps a service history for each property.'],
+ ['Which areas do you serve?','Kampala, Wakiso and Mukono at the moment. More areas will be added after the pilot.'],
+ ['How do I become a technician on HomeFix?','Create a technician account, choose your trade and area, and our team verifies your profile. Once approved you receive requests from customers and send quotes in the app.'],
+ ['Can I manage several properties?','Yes. Add each home, rental unit, Airbnb, hotel or office to your account. Every property gets its own jobs, warranties, reminders and expense history.'],
+ ['What if I am not happy with the work?','Message the technician in the job chat first. If the problem is not fixed, file a warranty claim and our team will review it and help resolve the dispute.'],
+ ['Is my information safe?','Passwords are stored as one-way hashes, access is limited by role, and key actions are written to an audit log. This prototype uses fictitious data only, so please do not enter real personal details.']];
+const faqHTML=l=>l.map(([q,a])=>`<details class="faq"><summary>${q}</summary><p>${a}</p></details>`).join('');
+const ART=`<svg viewBox="0 0 420 340" role="img" aria-label="Illustration of a house protected by a verified badge"><rect x="20" y="20" width="380" height="300" rx="28" fill="rgba(255,255,255,.07)"/><path d="M70 190 210 80l140 110v110H70z" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linejoin="round"/><rect x="180" y="210" width="60" height="90" rx="6" fill="rgba(255,255,255,.22)"/><rect x="95" y="215" width="55" height="45" rx="5" fill="rgba(255,255,255,.22)"/><rect x="270" y="215" width="55" height="45" rx="5" fill="rgba(255,255,255,.22)"/><circle cx="318" cy="98" r="42" fill="#EBA73F"/><path d="m298 98 14 14 26-28" fill="none" stroke="#2F1E00" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M60 300h300" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round"/></svg>`;
+
+PAGES.home=()=>{
+ const vt=S.techs.filter(t=>t.status==='verified'),top=vt.slice().sort((a,b)=>b.rating-a.rating).slice(0,3);
+ const rv=S.reviews.filter(r=>r.rating===5).slice(0,3);
+ return `
+<section class="hero2"><div class="wrap">
+ <div><p class="eyebrow">Kampala · Wakiso · Mukono</p>
+ <h1>Trusted Professionals. Better Maintained Properties.</h1>
+ <p class="lead">Find an ID-verified plumber, electrician, carpenter, painter, appliance or AC technician. Get a written quote, pay with mobile money, and keep a warranty and service record for every property.</p>
+ <form class="searchbar" data-form="hero" novalidate aria-label="Find a technician">
+  <div class="field"><label for="h-cat">What do you need?</label><select id="h-cat" name="cat"><option value="">All services</option>${Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+  <div class="field"><label for="h-loc">Where?</label><select id="h-loc" name="loc"><option value="">All areas</option>${LOCS.map(l=>`<option>${l}</option>`).join('')}</select></div>
+  <button class="btn accent" type="submit">Search</button></form>
+ <ul class="ticks"><li>ID-verified technicians</li><li>Written quotes before work starts</li><li>MTN MoMo and Airtel Money</li><li>90-day workmanship warranty</li></ul></div>
+ <div class="hero-art" aria-hidden="false">${ART}</div></div></section>
+<section class="strip"><div class="wrap"><div><b>${vt.length}</b><span>Verified technicians</span></div><div><b>${Object.keys(CATS).length}</b><span>Trades covered</span></div><div><b>${LOCS.length}</b><span>Cities served</span></div><div><b>90 days</b><span>Workmanship warranty</span></div></div></section>
+<section class="band"><div class="wrap"><div class="sec-head"><h2>Popular services</h2><p>Choose a trade to see verified technicians near you.</p></div>
+ <div class="grid">${Object.keys(CATS).map(k=>`<button class="card cat" type="button" data-act="cat" data-cat="${k}"><span class="ico">${svg(k)}</span>${CATS[k]}</button>`).join('')}</div></div></section>
+<section class="band alt"><div class="wrap"><div class="sec-head"><h2>How HomeFix works</h2><p>From the first search to your warranty, everything happens in one place.</p></div>
+ <ol class="steps"><li><b>Find a verified technician.</b><br><span class="muted">Filter by trade, area, rating and property type.</span></li><li><b>Approve a written quote.</b><br><span class="muted">Labour and materials listed before any work starts.</span></li><li><b>Track the job and chat.</b><br><span class="muted">One thread instead of calls and WhatsApp groups.</span></li><li><b>Pay and get a warranty.</b><br><span class="muted">Mobile money, a digital receipt and 90-day cover.</span></li></ol>
+ <p style="text-align:center;margin:24px 0 0"><a class="btn" href="#how">See the full process</a></p></div></section>
+<section class="band"><div class="wrap"><div class="sec-head"><h2>Built for peace of mind</h2><p>Everything property owners need to hire with confidence.</p></div>
+ <div class="grid">
+ <article class="card feat">${sicon('shield')}<h3>Verified profiles</h3><p>ID, skills, history, reviews and portfolios in one profile.</p></article>
+ <article class="card feat">${sicon('doc')}<h3>Digital quotations</h3><p>See labour and material costs and approve before work begins.</p></article>
+ <article class="card feat">${sicon('wallet')}<h3>Mobile money payments</h3><p>Pay with MTN MoMo or Airtel Money and get a receipt.</p></article>
+ <article class="card feat">${sicon('clock')}<h3>Warranty and disputes</h3><p>Workmanship warranty with in-app claims if something goes wrong.</p></article>
+ <article class="card feat">${sicon('star')}<h3>Honest reviews</h3><p>Ratings come only from completed, paid bookings.</p></article>
+ <article class="card feat">${sicon('grid')}<h3>Property dashboard</h3><p>Track jobs, expenses, warranties and reminders for every property.</p></article></div></div></section>
+<section class="band alt"><div class="wrap"><div class="sec-head"><h2>Who we help</h2><p>One marketplace for homes, rentals, hospitality and business.</p></div>
+ <div class="grid">
+ <article class="card feat">${sicon('home')}<h3>Individuals</h3><p>Homeowners and tenants with repairs and installations.</p></article>
+ <article class="card feat">${sicon('building')}<h3>Property owners</h3><p>Landlords, managers and multi-unit owners with many properties.</p></article>
+ <article class="card feat">${sicon('bed')}<h3>Hospitality</h3><p>Hotels, Airbnb hosts, B&amp;Bs and guesthouses needing quick turnarounds.</p></article>
+ <article class="card feat">${sicon('briefcase')}<h3>Commercial</h3><p>Offices, retail, SMEs and institutions with recurring upkeep.</p></article></div></div></section>
+<section class="band"><div class="wrap"><div class="sec-head"><h2>Top-rated technicians</h2><p>Highly rated professionals ready to help.</p></div>
+ <div class="grid">${top.map(techCard).join('')}</div><p style="text-align:center;margin:24px 0 0"><a class="btn primary" href="#search">Browse all technicians</a></p></div></section>
+<section class="band alt"><div class="wrap"><div class="sec-head"><h2>What customers say</h2></div>
+ <div class="grid">${rv.map(r=>{const t=tech(r.techId);return `<figure class="card quote"><div class="stars-row" aria-label="${r.rating} out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>${esc(r.comment)}</blockquote><figcaption><b>${esc(r.name)}</b><br><small>${t?esc(CATS[t.cat])+' with '+esc(t.name):''}</small></figcaption></figure>`;}).join('')}</div></div></section>
+<section class="band"><div class="wrap"><div class="sec-head"><h2>Service packages</h2><p>Pay per job, or choose a plan for ongoing maintenance.</p></div>
+ <div class="grid">${PLANS.map(p=>`<article class="card pkg"><h3>${p.name}<span class="price">${p.price}</span></h3><div class="for">${p.who}</div><p>${p.desc}</p></article>`).join('')}</div>
+ <p class="muted" style="text-align:center;margin-top:16px">Pricing to be set through pilot testing. <a href="#plans">Compare plans</a></p></div></section>
+<section class="band alt"><div class="wrap"><div class="sec-head"><h2>Frequently asked questions</h2></div><div style="max-width:760px;margin:0 auto">${faqHTML(FAQ.slice(0,4))}<p style="text-align:center"><a href="#help">More questions and answers</a></p></div></div></section>
+<section class="band"><div class="wrap cta">
+ <div class="card brandbg"><h2>Need a repair or regular upkeep?</h2><p>Create a free account, add your property and request your first quote in minutes.</p><div class="row"><a class="btn accent" href="#register">Create free account</a><a class="btn ghost" href="#search">Browse technicians</a></div></div>
+ <div class="card"><h2>Are you a skilled technician?</h2><p class="muted">Get verified, receive job requests, send digital quotes and get paid by mobile money.</p><button class="btn primary" type="button" data-act="join-tech">Join as a technician</button></div></div></section>`;};
+
+PAGES.how=()=>shell('How HomeFix works','A clear process for customers and technicians, from first request to warranty.',`
+<h2>For customers</h2><ol class="steps">
+<li><b>Create your account and add a property.</b><br><span class="muted">A home, rental unit, Airbnb, hotel or office.</span></li>
+<li><b>Choose a service and a verified technician.</b><br><span class="muted">One-time repair or recurring maintenance.</span></li>
+<li><b>Describe the problem and add a photo.</b><br><span class="muted">Pick a date and time that suits you.</span></li>
+<li><b>The technician inspects and sends a quote.</b><br><span class="muted">Labour and materials listed separately.</span></li>
+<li><b>Approve the quote, track the job and chat.</b><br><span class="muted">No work starts until you agree.</span></li>
+<li><b>Pay, review and keep your warranty.</b><br><span class="muted">Receipt and service record saved to your property.</span></li></ol>
+<section class="block"><h2>On-demand or recurring</h2><div class="tablewrap"><table><thead><tr><th></th><th>On-demand</th><th>Recurring</th></tr></thead><tbody>
+<tr><td><b>Best for</b></td><td>One-time repair or emergency</td><td>Ongoing upkeep of properties</td></tr>
+<tr><td><b>Typical users</b></td><td>Individuals, tenants</td><td>Landlords, hotels, Airbnb, offices</td></tr>
+<tr><td><b>Booking</b></td><td>Request, quote, book</td><td>Set frequency, auto-schedule</td></tr>
+<tr><td><b>Value</b></td><td>Fast, verified help</td><td>Reminders, records, priority</td></tr></tbody></table></div></section>
+<section class="block"><h2>For technicians</h2><ol class="steps"><li><b>Create a technician account.</b><br><span class="muted">Choose your trade and area.</span></li><li><b>Get verified.</b><br><span class="muted">Our team reviews your profile.</span></li><li><b>Quote and complete jobs.</b><br><span class="muted">Receive requests and send digital quotes.</span></li><li><b>Get paid and build your reputation.</b><br><span class="muted">Mobile money payouts and verified reviews.</span></li></ol></section>
+<div class="row" style="margin-top:8px"><a class="btn primary" href="#register">Create free account</a><a class="btn" href="#search">Browse technicians</a></div>`);
+
+PAGES.pros=()=>`
+<section class="phead"><div class="wrap"><h1>Grow your trade business with HomeFix</h1><p class="lead">Reach customers across Kampala, Wakiso and Mukono who are ready to book, and get paid securely.</p><div class="row" style="margin-top:18px"><button class="btn accent" type="button" data-act="join-tech">Join as a technician</button><a class="btn ghost" href="#login">Sign in</a></div></div></section>
+<div class="wrap pagepad"><div class="sec-head"><h2>Why join</h2></div><div class="grid">
+<article class="card feat">${sicon('users')}<h3>More customers</h3><p>Receive requests from homeowners, landlords, hotels and offices.</p></article>
+<article class="card feat">${sicon('shield')}<h3>A trusted profile</h3><p>Show your ID-verified badge, skills, portfolio and reviews.</p></article>
+<article class="card feat">${sicon('doc')}<h3>Digital quotes</h3><p>Send clear labour and materials quotes and win more jobs.</p></article>
+<article class="card feat">${sicon('wallet')}<h3>Get paid securely</h3><p>Customers pay by MTN MoMo or Airtel Money after the job.</p></article>
+<article class="card feat">${sicon('chat')}<h3>Fewer disputes</h3><p>Chat, quotes and job records protect you and your customer.</p></article>
+<article class="card feat">${sicon('grid')}<h3>Recurring contracts</h3><p>Win steady work from landlords and hospitality clients.</p></article></div>
+<section class="block"><div class="sec-head"><h2>How to get started</h2></div><ol class="steps"><li><b>Create your account.</b><br><span class="muted">Tell us your trade and area.</span></li><li><b>Get verified.</b><br><span class="muted">We review your profile before it goes live.</span></li><li><b>Start receiving requests.</b><br><span class="muted">Inspect, quote, complete and get paid.</span></li></ol></section>
+<p class="muted">Technicians keep their earnings after a ${FEE*100}% platform fee on completed jobs. Technician Premium tools are planned for the growth stage.</p></div>`;
+
+PAGES.about=()=>shell('About HomeFix Uganda','A trusted property services marketplace for homes, rentals, hospitality and businesses.',`
+<div class="split"><div class="prose"><h2>The problem we solve</h2><p>Property owners and businesses in Uganda have no reliable way to find, verify and hold accountable the technicians they hire. That leads to uncertain costs, poor workmanship, no warranty and no service records.</p>
+<h2>What we do</h2><p>HomeFix brings discovery, quotations, booking, tracking, payment, warranty and ongoing maintenance into one app. Customers get verified professionals and clear prices. Technicians get steady work and a reputation they can build on.</p>
+<h2>What we stand for</h2><ul><li><b>Verification.</b> Every technician profile is reviewed before it goes live.</li><li><b>Transparency.</b> Written quotes are approved before work starts.</li><li><b>Accountability.</b> Warranties and in-app claims back every job.</li><li><b>Continuing value.</b> Records, reminders and rewards, not restrictions on customers and technicians talking to each other.</li></ul></div>
+<aside class="card"><h3>HomeFix at a glance</h3><dl class="kv"><dt>Cities</dt><dd>Kampala, Wakiso, Mukono</dd><dt>Trades</dt><dd>${Object.values(CATS).join(', ')}</dd><dt>Payments</dt><dd>MTN MoMo, Airtel Money</dd><dt>Warranty</dt><dd>90 days on workmanship</dd></dl><p class="muted" style="margin-top:12px">HomeFix Uganda is a proposed service. This website is a working prototype that uses fictitious data and sandbox payments.</p><a class="btn primary" href="#contact">Contact us</a></aside></div>`);
+
+PAGES.help=()=>shell('Help centre','Answers to common questions about booking, payments and warranties.',`<div style="max-width:780px">${faqHTML(FAQ)}<div class="card flat" style="margin-top:20px"><h3>Still need help?</h3><p class="muted">Our support team replies within one working day.</p><a class="btn primary" href="#contact">Contact support</a></div></div>`);
+
+PAGES.contact=()=>shell('Contact us','Questions, feedback or a problem with a booking? Send us a message.',`
+<div class="split"><section class="card" id="contact-box">${contactForm()}</section>
+<aside class="card"><h3>Reach us</h3><dl class="kv"><dt>Email</dt><dd>hello@homefix.example</dd><dt>Phone</dt><dd>+256 700 000 000</dd><dt>Hours</dt><dd>Mon to Sat, 8:00 to 18:00 (EAT)</dd><dt>Areas</dt><dd>Kampala, Wakiso, Mukono</dd></dl><p class="muted" style="margin-top:12px">Contact details are fictitious for this prototype.</p></aside></div>`);
+function contactForm(){const u=me();return `<h2 style="font-size:22px">Send a message</h2><form data-form="contact" novalidate>${inp({name:'cname',label:'Your name',value:u?u.name:'',attrs:'autocomplete="name"'})}${inp({name:'cemail',label:'Email',type:'email',value:u?u.email:'',attrs:'autocomplete="email"'})}${sel({name:'ctopic',label:'Topic',options:[['','Choose a topic'],['Booking','A booking or quote'],['Payment','Payment or receipt'],['Warranty','Warranty or dispute'],['Technician','Becoming a technician'],['Other','Something else']]})}${txa({name:'cmsg',label:'Message',attrs:'placeholder="How can we help?"'})}<button class="btn primary" type="submit">Send message</button></form>`;}
+
+const legalNote='<div class="banner info">This prototype is for demonstration. These pages show the kind of terms a live service would publish and are not legal advice.</div>';
+PAGES.terms=()=>shell('Terms of use','Last updated 22 November 2026',`<div class="prose">${legalNote}
+<h2>1. About the service</h2><p>HomeFix Uganda connects property owners with independent technicians. Technicians are not employees of HomeFix.</p>
+<h2>2. Accounts</h2><p>You must give accurate information and keep your password private. You are responsible for activity on your account.</p>
+<h2>3. Quotes and payment</h2><p>Technicians quote labour and materials before work. Work starts only after the customer approves the quote. Payment is made through the app after the job is completed. A ${FEE*100}% platform fee applies to completed jobs.</p>
+<h2>4. Workmanship warranty</h2><p>Paid jobs include a 90-day workmanship warranty. Claims are made in the app and reviewed by HomeFix.</p>
+<h2>5. Conduct</h2><p>Users must be respectful, must not post false reviews, and must not misuse the platform.</p>
+<h2>6. Prototype notice</h2><p>This site uses fictitious data and sandbox payments. No real money is moved.</p></div>`);
+PAGES.privacy=()=>shell('Privacy policy','Last updated 22 November 2026',`<div class="prose">${legalNote}
+<h2>What we collect</h2><p>Name, email, phone number, property details, job details and messages needed to run the service.</p>
+<h2>How we use it</h2><p>To match customers with technicians, process bookings and payments, provide warranties and keep the platform safe.</p>
+<h2>What we do not collect</h2><p>This prototype never asks for card numbers, mobile money PINs, one-time codes or national ID numbers.</p>
+<h2>Security</h2><p>Passwords are stored as hashes. Access is limited by role and key actions are recorded in an audit log.</p>
+<h2>Your choices</h2><p>You can update your details from your account page and ask us to delete your account through the contact page.</p>
+<h2>Data retention</h2><p>Job records and warranties are kept while a warranty is active. Demo data in this prototype is stored only in your browser.</p></div>`);
+
+PAGES.plans=()=>{const u=me();
+ return shell('Plans and pricing','Pay per job or choose a plan for ongoing maintenance.',`<p class="muted">Pricing to be set through pilot testing. Subscribing here is simulated.</p>
+ <div class="grid">${PLANS.map(p=>`<article class="card pkg"><h3>${p.name}<span class="price">${p.price}</span></h3><div class="for">${p.who}</div><p>${p.desc}</p>${!u?`<button class="btn sm primary" type="button" data-act="plan-guest">Get started</button>`:u.role!=='customer'?'':(u.plan===p.id?'<span class="pill active">Current plan</span>':`<button class="btn sm primary" type="button" data-act="plan" data-id="${p.id}">Subscribe</button>`)}</article>`).join('')}</div>
+ <section class="block"><h2>How HomeFix earns</h2><div class="tablewrap"><table><thead><tr><th></th><th>On-demand</th><th>Recurring</th></tr></thead><tbody><tr><td><b>Customer pays</b></td><td>Per job, after approving a quote</td><td>Subscription or contract</td></tr><tr><td><b>HomeFix income</b></td><td>Commission per completed job</td><td>Subscriptions and contracts</td></tr></tbody></table></div></section>`);};
+
+PAGES.login=(msg)=>`
+<div class="auth"><section class="card"><h1 style="font-size:28px">Welcome back</h1><p class="muted">Sign in to manage your bookings and properties.</p>
+${msg?`<div class="banner">${esc(msg)}</div>`:''}
+<form data-form="login" novalidate>
+${inp({name:'email',label:'Email',type:'email',attrs:'autocomplete="username"'})}
+${inp({name:'password',label:'Password',type:'password',attrs:'autocomplete="current-password"'})}
+<p style="text-align:right;margin:-6px 0 12px"><a href="#forgot">Forgot password?</a></p>
+<button class="btn primary" type="submit" style="width:100%">Sign in</button></form>
+<p style="margin:16px 0 0;text-align:center">New to HomeFix? <a href="#register">Create an account</a></p></section>
+<details class="faq" style="margin-top:16px"><summary>Demo accounts for testing</summary><div style="padding:0 16px 14px"><p class="muted">Fictitious accounts. Password for all: <b>Demo@123</b></p>
+${S.users.filter(u=>u.id.length===2).map(u=>`<div class="row" style="justify-content:space-between;margin-bottom:10px"><div><b>${esc(u.role[0].toUpperCase()+u.role.slice(1))}</b><br><small>${esc(u.email)}</small></div><button class="btn sm" type="button" data-act="fill" data-email="${esc(u.email)}">Use</button></div>`).join('')}</div></details></div>`;
+
+PAGES.register=()=>{const r=ui.regRole||'customer';return `
+<div class="auth" style="max-width:560px"><section class="card"><h1 style="font-size:28px">Create your account</h1><p class="muted">Free to join. Already registered? <a href="#login">Sign in</a></p>
+<form data-form="register" novalidate>
+<fieldset><legend>I want to</legend><div class="two-opt">
+<label class="opt"><input type="radio" name="role" value="customer"${r==='customer'?' checked':''}><span><b>Hire a technician</b><br><small>Customer account</small></span></label>
+<label class="opt"><input type="radio" name="role" value="technician"${r==='technician'?' checked':''}><span><b>Offer my services</b><br><small>Technician account</small></span></label></div></fieldset>
+${inp({name:'rname',label:'Full name',attrs:'autocomplete="name"'})}
+${inp({name:'remail',label:'Email',type:'email',attrs:'autocomplete="email"'})}
+${inp({name:'rphone',label:'Phone number',type:'tel',attrs:'placeholder="+256 772 000 111" autocomplete="tel"',hint:'Use a fictitious number in this prototype.'})}
+<div id="tech-fields"${r==='technician'?'':' hidden'}>
+${sel({name:'rtrade',label:'Your trade',options:Object.entries(CATS)})}
+${sel({name:'rcity',label:'City you work in',options:LOCS.map(l=>[l,l])})}
+<p class="hint" style="margin:-4px 0 14px">A live service would ask for your ID and trade certificate. Documents are not collected in this prototype. Your profile appears in search once an admin verifies it.</p></div>
+${inp({name:'rpass',label:'Password',type:'password',attrs:'autocomplete="new-password"',hint:'At least 8 characters with a letter and a number.'})}
+${inp({name:'rpass2',label:'Confirm password',type:'password',attrs:'autocomplete="new-password"'})}
+<div class="field"><label class="chk"><input type="checkbox" name="terms" id="terms" aria-describedby="terms-err"> <span>I agree to the <a href="#terms" target="_blank" rel="noopener">Terms of use</a> and <a href="#privacy" target="_blank" rel="noopener">Privacy policy</a>.</span></label><div class="err" id="terms-err" data-err="terms" role="alert"></div></div>
+<button class="btn primary" type="submit" style="width:100%">Create account</button></form></section></div>`;};
+
+PAGES.forgot=()=>`<div class="auth"><section class="card" id="forgot-box"><h1 style="font-size:28px">Reset your password</h1><p class="muted">Enter your email and we will send a reset link.</p>
+<form data-form="forgot" novalidate>${inp({name:'femail',label:'Email',type:'email',attrs:'autocomplete="email"'})}<button class="btn primary" type="submit" style="width:100%">Send reset link</button></form><p style="margin:16px 0 0;text-align:center"><a href="#login">Back to sign in</a></p></section></div>`;
+
+PAGES.account=()=>{const u=me();return `<h1>My account</h1><div class="split"><section class="card"><h3>Profile</h3><form data-form="account" novalidate>
+${inp({name:'aname',label:'Full name',value:u.name,attrs:'autocomplete="name"'})}
+<div class="field"><label for="aemail">Email</label><input id="aemail" value="${esc(u.email)}" disabled></div>
+${inp({name:'aphone',label:'Phone number',type:'tel',value:u.phone||'',attrs:'placeholder="+256 772 000 111" autocomplete="tel"'})}
+<button class="btn primary" type="submit">Save changes</button></form></section>
+<aside class="card"><h3>Account</h3><dl class="kv"><dt>Role</dt><dd>${esc(u.role)}</dd>${u.role==='customer'?`<dt>Plan</dt><dd>${esc(u.plan||'QuickFix')} <a href="#plans">Change</a></dd>`:''}</dl><button class="btn" type="button" data-act="logout" style="margin-top:14px">Sign out</button></aside></div>`;};
+
+function results(){const f=ui.filters;return S.techs.filter(t=>t.status==='verified'&&(!f.cat||t.cat===f.cat)&&(!f.loc||t.loc===f.loc)&&t.rating>=+f.min&&(!f.ptype||t.serves.includes(f.ptype))).sort((a,b)=>b.rating-a.rating);}
+function resultsHTML(){const r=results();return `<p class="muted" aria-live="polite">${r.length} verified technician${r.length===1?'':'s'}</p>`+(r.length?`<div class="grid">${r.map(techCard).join('')}</div>`:`<div class="card flat"><b>No technicians match these filters.</b><p class="muted" style="margin:6px 0 0">Try a different area or lower the minimum rating.</p></div>`);}
+PAGES.search=()=>{const f=ui.filters;return `<h1>Find a verified technician</h1>
+<div class="card flat" style="margin-bottom:16px"><div class="filters">
+${sel({name:'f-cat',label:'Service',value:f.cat,attrs:'data-filter="cat"',options:[['','All services'],...Object.entries(CATS)]})}
+${sel({name:'f-loc',label:'Location',value:f.loc,attrs:'data-filter="loc"',options:[['','All areas'],...LOCS.map(l=>[l,l])]})}
+${sel({name:'f-min',label:'Minimum rating',value:f.min,attrs:'data-filter="min"',options:[['0','Any rating'],['4','4.0 and up'],['4.5','4.5 and up']]})}
+${sel({name:'f-ptype',label:'Property type',value:f.ptype,attrs:'data-filter="ptype"',options:[['','Any property'],...PTYPES.map(p=>[p,p])]})}
+<button class="btn" type="button" data-act="reset-filters">Clear filters</button></div></div>
+<div id="results">${resultsHTML()}</div>`;};
+
+PAGES.tech=id=>{const t=tech(id);if(!t||(t.status!=='verified'&&!(me()&&(me().role==='admin'||me().techId===t.id))))return PAGES.nf();const rv=S.reviews.filter(r=>r.techId===id);const u=me();
+ return `<p><a href="#search">&larr; All technicians</a></p>
+<div class="split"><div>
+<section class="card"><div class="tc">${avatar(t.name)}<div><h1 style="font-size:28px;margin:0">${esc(t.name)}</h1><div class="meta">${esc(CATS[t.cat])} · ${esc(t.area)}, ${esc(t.loc)}</div></div></div>
+<p style="margin:14px 0"><span class="badge">ID verified &#10003;</span> ${t.cert?'<span class="badge">Certified &#10003;</span>':'<span class="badge n">Certificate pending</span>'}</p>
+<p>${esc(t.bio)}</p><div>${t.skills.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
+<p class="meta" style="margin-top:10px"><b>${t.jobs} jobs · &#9733; ${t.rating.toFixed(1)}</b> · Serves: ${t.serves.map(esc).join(', ')}</p></section>
+<section class="card" style="margin-top:16px"><h2 style="font-size:20px">Portfolio</h2><div class="port">${PORT[t.cat].map((c,i)=>`<div class="tile" style="--c1:${COLORS[i%4][0]};--c2:${COLORS[i%4][1]}" role="img" aria-label="Sample project: ${esc(c)}">${esc(c)}<small>${esc(t.area)}</small></div>`).join('')}</div></section>
+<section class="card" style="margin-top:16px"><h2 style="font-size:20px">Reviews</h2>${rv.length?rv.map(r=>`<div style="margin-bottom:12px"><b>${'&#9733;'.repeat(r.rating)}</b> <small>${esc(r.name)} · ${fmtDate(r.date)}</small><br>${esc(r.comment)}</div>`).join(''):'<p class="muted">No reviews yet.</p>'}</section></div>
+<aside><div class="card"><h3>Request a quote</h3><p class="muted">The technician visits, inspects and sends a written quote. You approve it before work starts.</p>${(!u||u.role==='customer')?`<button class="btn primary" type="button" data-act="quote" data-id="${t.id}" style="width:100%">Request quote</button>${u?'':'<p class="hint" style="margin-top:8px">Free account required to book.</p>'}`:'<p class="banner info">Only customer accounts can book.</p>'}</div></aside></div>`;};
+
+/* booking */
+function newDraft(techId){const t=techId?tech(techId):null;const mp=myProps(),u=me();return {step:1,propId:mp[0]?mp[0].id:'',cat:t?t.cat:'plumbing',techId:techId||'',recur:'once',freq:'Monthly',desc:'',photo:'',date:'',time:'',phone:(u&&u.phone)||''};}
+const STEPS=['Property','Service','Frequency','Problem','Date and time','Confirm'];
+function bkBody(){
+ const d=ui.draft,s=d.step;
+ if(s===1&&!myProps().length)return `<div class="banner">You have no properties yet. <a href="#properties">Add your first property</a>, then come back to finish this booking.</div><div class="err" data-err="propId" role="alert"></div>`;
+ if(s===1)return `<fieldset><legend>Which property is this for?</legend>${myProps().map(p=>`<label class="opt"><input type="radio" name="propId" value="${p.id}" data-draft="propId"${d.propId===p.id?' checked':''}><span><b>${esc(p.name)}</b><br><small>${esc(p.type)} · ${esc(p.address)}</small></span></label>`).join('')}</fieldset><div class="err" data-err="propId" role="alert"></div>`;
+ if(s===2){const list=S.techs.filter(t=>t.status==='verified'&&t.cat===d.cat);
+  return sel({name:'cat',label:'Service',value:d.cat,attrs:'data-draft="cat"',options:Object.entries(CATS)})+sel({name:'techId',label:'Technician',value:d.techId,attrs:'data-draft="techId"',options:[['','Choose a technician'],...list.map(t=>[t.id,`${t.name} (★ ${t.rating.toFixed(1)}, ${t.loc})`])]});}
+ if(s===3)return `<fieldset><legend>Is this a one-time job or recurring maintenance?</legend>
+ <label class="opt"><input type="radio" name="recur" value="once" data-draft="recur"${d.recur==='once'?' checked':''}><span><b>One-time</b><br><small>Repair, installation or emergency.</small></span></label>
+ <label class="opt"><input type="radio" name="recur" value="recurring" data-draft="recur"${d.recur==='recurring'?' checked':''}><span><b>Recurring</b><br><small>Regular maintenance with reminders.</small></span></label></fieldset>
+ ${d.recur==='recurring'?sel({name:'freq',label:'How often?',value:d.freq,attrs:'data-draft="freq"',options:Object.keys(FREQ).map(k=>[k,k])}):''}`;
+ if(s===4)return txa({name:'desc',label:'Describe the problem',value:d.desc,attrs:'data-draft="desc" placeholder="What is wrong, where, and since when?"'})+inp({name:'photo',label:'Photo (optional)',type:'file',attrs:'accept="image/*" data-draft="photo"',hint:'Prototype: only the file name is kept, nothing is uploaded.'})+(d.photo?`<p class="muted">Attached: ${esc(d.photo)}</p>`:'');
+ if(s===5){const min=addDays(1);return inp({name:'date',label:'Preferred date',type:'date',value:d.date,attrs:`min="${min}" data-draft="date"`})+sel({name:'time',label:'Time',value:d.time,attrs:'data-draft="time"',options:[['','Choose a time'],...['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00'].map(x=>[x,x])]});}
+ const t=tech(d.techId),p=prop(d.propId);
+ return `<dl class="kv"><dt>Property</dt><dd>${esc(p.name)}</dd><dt>Service</dt><dd>${esc(CATS[d.cat])}</dd><dt>Technician</dt><dd>${esc(t.name)}</dd><dt>Type</dt><dd>${d.recur==='recurring'?'Recurring, '+esc(d.freq):'One-time'}</dd><dt>When</dt><dd>${fmtDate(d.date)} at ${esc(d.time)}</dd><dt>Problem</dt><dd>${esc(d.desc)}</dd></dl><hr style="border:0;border-top:1px solid var(--line);margin:16px 0">`+inp({name:'phone',label:'Contact phone',type:'tel',value:d.phone,attrs:'data-draft="phone" placeholder="+256 772 000 111" autocomplete="tel"',hint:'Format: +256 followed by 9 digits. Use a fictitious number.'});
+}
+function bkValidate(){const d=ui.draft,e={};
+ if(d.step===1&&!d.propId)e.propId='Add a property first, then choose it.';
+ if(d.step===2&&!d.techId)e.techId='Choose a technician for this service.';
+ if(d.step===4&&d.desc.trim().length<10)e.desc='Describe the problem in at least 10 characters.';
+ if(d.step===5){if(!d.date)e.date='Choose a date.';else if(d.date<=todayISO())e.date='Choose a date after today.';if(!d.time)e.time='Choose a time.';}
+ if(d.step===6&&!okPhone(d.phone))e.phone='Enter a phone number like +256 772 000 111.';
+ return e;}
+function bkRender(){const d=ui.draft,box=$('#bk');if(!box)return;
+ box.innerHTML=`<ol class="tl" aria-label="Booking progress">${STEPS.map((n,i)=>`<li class="${i+1<d.step?'done':''}${i+1===d.step?' now':''}"${i+1===d.step?' aria-current="step"':''}>${n}</li>`).join('')}</ol>
+ <form data-form="bk" novalidate><h2 style="font-size:20px">Step ${d.step} of 6: ${STEPS[d.step-1]}</h2>${bkBody()}
+ <div class="row" style="margin-top:8px">${d.step>1?'<button class="btn" type="button" data-act="bk-back">Back</button>':''}<button class="btn primary" type="submit">${d.step===6?'Confirm booking':'Next'}</button></div></form>`;}
+PAGES.booking=()=>{if(!ui.draft)ui.draft=newDraft('');return `<h1>Book a technician</h1><div class="card" style="max-width:640px" id="bk"></div>`;};
+
+/* jobs list */
+function jobRow(j){const t=tech(j.techId),p=prop(j.propId);return `<tr><td><a href="#job-${j.id}"><b>${esc(j.title)}</b></a><br><small>${esc(p?p.name:'')}</small></td><td>${esc(t?t.name:'')}</td><td>${fmtDate(j.date)}</td><td>${pill(j.status)}${j.paid?' <span class="pill paid">Paid</span>':''}</td><td class="num">${j.quote?UGX(total(j)):'-'}</td></tr>`;}
+PAGES.jobs=()=>{const u=me(),js=S.jobs.filter(j=>j.custId===u.id).sort((a,b)=>b.created-a.created);
+ return `<div class="row" style="justify-content:space-between"><h1>My jobs</h1><button class="btn primary" type="button" data-act="new-booking">New booking</button></div>
+ ${js.length?`<div class="tablewrap"><table><caption class="muted" style="text-align:left;padding:8px 12px;caption-side:top">All bookings</caption><thead><tr><th>Job</th><th>Technician</th><th>Date</th><th>Status</th><th class="num">Quote</th></tr></thead><tbody>${js.map(jobRow).join('')}</tbody></table></div>`:'<div class="card flat">No bookings yet. Find a technician to start.</div>'}`;};
+
+/* job detail */
+function chatHTML(j){const u=me(),m=S.chat[j.id]||[];return m.length?m.map(x=>`<div class="msg${x.role===u.role?' mine':''}"><small>${esc(x.name)} · ${fmtTS(x.ts)}</small>${esc(x.text)}</div>`).join(''):'<p class="muted">No messages yet.</p>';}
+PAGES.job=id=>{
+ const j=job(id),u=me(),t=tech(j.techId),p=prop(j.propId),c=user(j.custId),w=S.warranties.find(x=>x.jobId===j.id);
+ const idx=ORDER.indexOf(j.status);
+ const back=u.role==='customer'?['jobs','My jobs']:u.role==='technician'?['technician','Dashboard']:['admin','Admin'];
+ let action='';
+ if(u.role==='technician'&&j.status==='requested')action=`<div class="card"><h3>Send quotation</h3><p class="muted">The customer must approve before work starts.</p><form data-form="quote" data-id="${j.id}" novalidate>${inp({name:'labour',label:'Labour (UGX)',type:'number',attrs:'min="0" step="1000" inputmode="numeric"'})}${inp({name:'materials',label:'Materials (UGX)',type:'number',value:'0',attrs:'min="0" step="1000" inputmode="numeric"'})}${txa({name:'note',label:'What the quote covers',attrs:'placeholder="Scope of work"'})}<button class="btn primary" type="submit">Send quotation</button></form></div>`;
+ else if(u.role==='technician'&&j.status==='approved')action=`<div class="card"><h3>Quote approved</h3><p>Start work when you arrive on site.</p><button class="btn primary" type="button" data-act="job-start" data-id="${j.id}">Start work</button></div>`;
+ else if(u.role==='technician'&&j.status==='in_progress')action=`<div class="card"><h3>Work in progress</h3><p>Mark the job complete when finished. The customer is then asked to pay.</p><button class="btn primary" type="button" data-act="job-complete" data-id="${j.id}">Mark completed</button></div>`;
+ else if(u.role==='customer'&&j.status==='quoted')action=`<div class="card"><h3>Quotation ready</h3><p>Approve to confirm the booking, or decline to cancel.</p><div class="row"><button class="btn primary" type="button" data-act="job-approve" data-id="${j.id}">Approve quote</button><button class="btn danger" type="button" data-act="job-decline" data-id="${j.id}">Decline</button></div></div>`;
+ else if(u.role==='customer'&&j.status==='completed'&&!j.paid)action=`<div class="card"><h3>Job completed</h3><p>Pay securely in the sandbox to receive your receipt and warranty.</p><a class="btn accent" href="#pay-${j.id}">Pay ${UGX(total(j))}</a></div>`;
+ const quote=j.quote?`<div class="card"><h3>Quotation</h3><div class="tablewrap"><table style="min-width:0"><tbody><tr><td>Labour</td><td class="num">${UGX(j.quote.labour)}</td></tr><tr><td>Materials</td><td class="num">${UGX(j.quote.materials)}</td></tr><tr><td><b>Total</b></td><td class="num"><b>${UGX(total(j))}</b></td></tr></tbody></table></div><p class="muted" style="margin:10px 0 0">${esc(j.quote.note||'')}</p>${u.role==='technician'?`<p class="muted" style="margin:6px 0 0">You receive ${UGX(total(j)*(1-FEE))} after the ${FEE*100}% platform fee.</p>`:''}</div>`:'';
+ const receipt=j.receipt?`<div class="card"><h3>Receipt ${esc(j.receipt.id)}</h3><dl class="kv"><dt>Method</dt><dd>${esc(j.receipt.method)}</dd><dt>Number</dt><dd>${esc(j.receipt.phone)}</dd><dt>Amount</dt><dd>${UGX(j.receipt.amount)}</dd><dt>Platform fee</dt><dd>${UGX(j.receipt.fee)}</dd><dt>Paid</dt><dd>${fmtTS(j.receipt.ts)}</dd></dl></div>`:'';
+ const warr=w?`<div class="card"><h3>Workmanship warranty</h3><p>Active from ${fmtDate(w.start)} to <b>${fmtDate(w.end)}</b>.</p>${u.role==='customer'?'<a class="btn sm" href="#properties">File a claim</a>':''}</div>`:'';
+ const rev=u.role==='customer'&&j.paid&&!j.review?`<div class="card"><h3>Rate this job</h3><form data-form="review" data-id="${j.id}" novalidate><fieldset><legend>Rating</legend><div class="stars">${[5,4,3,2,1].map(n=>`<label><input type="radio" name="rating" value="${n}"> ${n} &#9733;</label>`).join('')}</div><div class="err" data-err="rating" role="alert"></div></fieldset>${txa({name:'comment',label:'Comment',attrs:'placeholder="How did it go?"'})}<button class="btn primary" type="submit">Submit review</button></form></div>`:'';
+ return `<p><a href="#${back[0]}">&larr; ${back[1]}</a></p>
+ <div class="row" style="justify-content:space-between"><h1 style="margin:0">${esc(j.title)}</h1>${pill(j.status)}</div>
+ <p class="muted">${esc(p?p.name:'')} · ${esc(CATS[j.cat])} · ${fmtDate(j.date)} at ${esc(j.time)}${j.recurring?' · Recurring, '+esc(j.recurring.freq):''}</p>
+ ${j.status==='declined'?'<div class="banner bad">This quotation was declined. No work will be done.</div>':`<ol class="tl" aria-label="Job status">${ORDER.map((s,i)=>`<li class="${i<idx?'done':''}${i===idx?' now done':''}">${STATUS[s]}</li>`).join('')}</ol>`}
+ <div class="split"><div style="display:grid;gap:16px;align-content:start">
+  <div class="card"><h3>Details</h3><dl class="kv"><dt>Customer</dt><dd>${esc(c?c.name:'')}</dd><dt>Technician</dt><dd>${esc(t?t.name:'')}</dd><dt>Problem</dt><dd>${esc(j.desc)}</dd>${j.photo?`<dt>Photo</dt><dd>${esc(j.photo)}</dd>`:''}<dt>Contact</dt><dd>${esc(j.phone)}</dd>${nextVisit(j)?`<dt>Next visit</dt><dd>${fmtDate(nextVisit(j))}</dd>`:''}</dl></div>
+  ${action}${quote}${receipt}${warr}${rev}</div>
+ <div class="card" style="align-self:start"><h3>Messages</h3><div class="chat" id="chat" aria-live="polite">${chatHTML(j)}</div>
+ <form data-form="chat" data-id="${j.id}" novalidate>${inp({name:'msg',label:'Message',attrs:'placeholder="Type a message" autocomplete="off"'})}<button class="btn sm primary" type="submit">Send</button></form><p class="hint" style="margin-top:8px">Demo: the other party replies automatically.</p></div></div>`;};
+
+PAGES.pay=id=>{const j=job(id);
+ if(j.paid)return `<h1>Payment</h1><div class="banner good">This job is already paid. <a href="#job-${j.id}">View receipt</a></div>`;
+ if(j.status!=='completed')return `<h1>Payment</h1><div class="banner">Payment opens after the technician marks the job completed. <a href="#job-${j.id}">Back to job</a></div>`;
+ return `<p><a href="#job-${j.id}">&larr; Back to job</a></p><h1>Pay for this job</h1>
+ <div class="banner">SANDBOX - no real money. Never enter a real PIN, OTP or card number here.</div>
+ <div class="card" style="max-width:520px"><dl class="kv"><dt>Job</dt><dd>${esc(j.title)}</dd><dt>Amount</dt><dd><b>${UGX(total(j))}</b></dd></dl><hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+ <form data-form="pay" data-id="${j.id}" novalidate><fieldset><legend>Mobile money provider</legend>
+ <label class="opt"><input type="radio" name="method" value="MTN MoMo" checked><span><b>MTN MoMo</b></span></label>
+ <label class="opt"><input type="radio" name="method" value="Airtel Money"><span><b>Airtel Money</b></span></label></fieldset>
+ ${inp({name:'phone',label:'Mobile money number',type:'tel',attrs:'placeholder="+256 772 000 111" autocomplete="tel"',hint:'Fictitious number only. No PIN is requested in this prototype.'})}
+ <div class="row"><button class="btn accent" type="submit" name="result" value="ok">Simulate payment</button><button class="btn danger" type="submit" name="result" value="fail">Simulate failure</button></div>
+ <div class="err" data-err="pay" role="alert"></div></form></div>`;};
+
+/* property dashboard */
+function addPropForm(){return `<section class="card" style="margin-top:20px;max-width:560px"><h3>Add a property</h3><form data-form="addprop" novalidate>${inp({name:'pname',label:'Property name',attrs:'placeholder="e.g. Bugolobi Apartment 2A"'})}${sel({name:'ptype',label:'Property type',options:PTYPES.map(x=>[x,x])})}${inp({name:'parea',label:'Area or neighbourhood',attrs:'placeholder="e.g. Bugolobi"'})}${sel({name:'pcity',label:'City',options:LOCS.map(x=>[x,x])})}<button class="btn primary" type="submit">Add property</button></form></section>`;}
+PAGES.properties=()=>{const u=me(),mp=myProps();
+ if(!mp.length)return `<h1>My properties</h1><div class="card flat" style="margin-bottom:16px"><b>You have not added a property yet.</b><p class="muted" style="margin:6px 0 0">Add a home, rental unit, Airbnb, hotel or office to book technicians and track jobs, warranties and expenses.</p></div>`+addPropForm();
+ const p=mp.find(x=>x.id===ui.prop)||mp[0];ui.prop=p.id;
+ const js=S.jobs.filter(j=>j.propId===p.id);
+ const paid=js.filter(j=>j.paid&&j.receipt);
+ const now=new Date(),mk=d=>d.getFullYear()+'-'+pad(d.getMonth()+1);
+ const months=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({k:mk(d),l:d.toLocaleDateString('en-GB',{month:'short'}),v:0});}
+ paid.forEach(j=>{const m=months.find(x=>x.k===(j.completedAt||'').slice(0,7));if(m)m.v+=total(j);});
+ const max=Math.max(1,...months.map(m=>m.v)),thisMonth=months[5].v;
+ const upcoming=js.filter(j=>['requested','quoted','approved','in_progress'].includes(j.status));
+ const rec=js.map(j=>({j,nv:nextVisit(j)})).filter(x=>x.nv);
+ const rem=S.reminders.filter(r=>r.propId===p.id).sort((a,b)=>a.due<b.due?-1:1);
+ const ws=S.warranties.filter(w=>w.propId===p.id);
+ const activeW=ws.filter(w=>w.end>=todayISO());
+ const cl=S.claims.filter(c=>ws.some(w=>w.id===c.warrantyId));
+ const hist=js.filter(j=>j.status==='completed').sort((a,b)=>a.completedAt<b.completedAt?1:-1);
+ return `<h1>My properties</h1>
+ <div class="grid" style="margin-bottom:20px">${mp.map(x=>`<button class="card cat" type="button" data-act="prop" data-id="${x.id}" aria-pressed="${x.id===p.id}" style="${x.id===p.id?'border-color:var(--brand);background:var(--tint)':''}"><span><b>${esc(x.name)}</b><br><small>${esc(x.type)} · ${esc(x.address)}</small></span></button>`).join('')}</div>
+ <div class="stats"><div class="stat"><b>${UGX(thisMonth)}</b><span>Spent this month</span></div><div class="stat"><b>${UGX(months.reduce((a,m)=>a+m.v,0))}</b><span>Last 6 months</span></div><div class="stat"><b>${hist.length}</b><span>Completed jobs</span></div><div class="stat"><b>${activeW.length}</b><span>Active warranties</span></div></div>
+ <div class="grid two" style="margin-top:16px">
+ <section class="card"><h3>Expenses by month</h3><div class="bars" role="img" aria-label="Spend by month: ${months.map(m=>m.l+' '+UGX(m.v)).join(', ')}">${months.map(m=>`<div class="bar"><span>${m.v?Math.round(m.v/1000)+'k':''}</span><i style="height:${Math.round(m.v/max*80)}%"></i><span>${m.l}</span></div>`).join('')}</div></section>
+ <section class="card"><h3>Upcoming</h3>${upcoming.length||rec.length?`<ul style="padding-left:18px;margin:0">${upcoming.map(j=>`<li><a href="#job-${j.id}">${esc(j.title)}</a> · ${fmtDate(j.date)} ${pill(j.status)}</li>`).join('')}${rec.map(x=>`<li>${esc(x.j.title)}: next visit ${fmtDate(x.nv)} (${esc(x.j.recurring.freq)})</li>`).join('')}</ul>`:'<p class="muted">Nothing scheduled.</p>'}
+ <h3 style="margin-top:16px">Reminders</h3>${rem.length?`<ul style="padding-left:18px;margin:0">${rem.map(r=>`<li>${esc(r.text)}, due ${fmtDate(r.due)}</li>`).join('')}</ul>`:'<p class="muted">No reminders.</p>'}</section></div>
+ <section class="block"><h2 style="font-size:20px">Service history</h2>${hist.length?`<div class="tablewrap"><table><thead><tr><th>Job</th><th>Technician</th><th>Completed</th><th class="num">Cost</th></tr></thead><tbody>${hist.map(j=>`<tr><td><a href="#job-${j.id}">${esc(j.title)}</a></td><td>${esc(tech(j.techId).name)}</td><td>${fmtDate(j.completedAt)}</td><td class="num">${UGX(total(j))}</td></tr>`).join('')}</tbody></table></div>`:'<div class="card flat">No completed jobs for this property yet.</div>'}</section>
+ <div class="grid two"><section class="card"><h3>Warranties</h3>${ws.length?ws.map(w=>`<p><b>${esc(w.title)}</b><br><small>${fmtDate(w.start)} to ${fmtDate(w.end)}</small> ${w.end>=todayISO()?'<span class="pill active">Active</span>':'<span class="pill declined">Expired</span>'}</p>`).join(''):'<p class="muted">Warranties appear after a job is paid.</p>'}
+ ${cl.length?`<h3 style="margin-top:16px">Claims</h3>${cl.map(c=>`<p>${esc(c.reason)}<br><small>${fmtTS(c.created)}</small> ${pill(c.state)}</p>`).join('')}`:''}</section>
+ <section class="card"><h3>File a warranty claim</h3>${activeW.length?`<form data-form="claim" novalidate>${sel({name:'warrantyId',label:'Warranty',options:[['','Choose a warranty'],...activeW.map(w=>[w.id,w.title])]})}${txa({name:'reason',label:'What went wrong?',attrs:'placeholder="Describe the problem"'})}<button class="btn primary" type="submit">Submit claim</button></form>`:'<p class="muted">No active warranty for this property.</p>'}</section></div>`+addPropForm();};
+
+
+PAGES.technician=()=>{const u=me(),t=tech(u.techId),js=S.jobs.filter(j=>j.techId===t.id).sort((a,b)=>b.created-a.created);
+ const inc=js.filter(j=>j.status==='requested'),earn=js.filter(j=>j.paid).reduce((a,j)=>a+total(j)*(1-FEE),0);
+ return `<h1>Technician dashboard</h1><p class="muted">${esc(t.name)} · ${esc(CATS[t.cat])} · ${esc(t.loc)}</p>${t.status==='pending'?'<div class="banner"><b>Verification pending.</b> Your profile is under review. Customers will see it in search once an admin approves it.</div>':t.status==='rejected'?'<div class="banner bad">Your application was not approved. Contact support for help.</div>':''}
+ <div class="stats"><div class="stat"><b>${inc.length}</b><span>New requests</span></div><div class="stat"><b>${js.filter(j=>['approved','in_progress'].includes(j.status)).length}</b><span>Active jobs</span></div><div class="stat"><b>${UGX(earn)}</b><span>Earnings after ${FEE*100}% fee</span></div><div class="stat"><b>&#9733; ${t.rating.toFixed(1)}</b><span>${t.jobs} jobs</span></div></div>
+ <section class="block"><h2 style="font-size:20px">Incoming requests</h2>${inc.length?`<div class="grid two">${inc.map(j=>`<article class="card"><h3>${esc(j.title)}</h3><p class="muted">${esc(prop(j.propId)?prop(j.propId).name:'')} · ${fmtDate(j.date)} at ${esc(j.time)}</p><p>${esc(j.desc)}</p><a class="btn sm primary" href="#job-${j.id}">Open and send quote</a></article>`).join('')}</div>`:'<div class="card flat">No new requests.</div>'}</section>
+ <section class="block"><h2 style="font-size:20px">All jobs</h2><div class="tablewrap"><table><thead><tr><th>Job</th><th>Customer</th><th>Date</th><th>Status</th><th class="num">Quote</th></tr></thead><tbody>${js.map(j=>`<tr><td><a href="#job-${j.id}"><b>${esc(j.title)}</b></a></td><td>${esc(user(j.custId).name)}</td><td>${fmtDate(j.date)}</td><td>${pill(j.status)}${j.paid?' <span class="pill paid">Paid</span>':''}</td><td class="num">${j.quote?UGX(total(j)):'-'}</td></tr>`).join('')}</tbody></table></div></section>
+ <div class="grid two"><div class="card"><h3>Profile status</h3><p>${t.status==='verified'?'<span class="badge">ID verified &#10003;</span>':'<span class="badge n">Verification pending</span>'} ${t.cert?'<span class="badge">Certified &#10003;</span>':''}</p></div>
+ <div class="card"><h3>Technician Premium</h3><p class="muted">Job analytics, tools and extra visibility in search. Planned for the growth stage.</p><button class="btn sm" type="button" data-act="premium">Join the waitlist</button></div></div>`;};
+
+PAGES.admin=()=>{const pend=S.applicants.filter(a=>a.state==='pending'),done=S.applicants.filter(a=>a.state!=='pending');
+ const disp=S.claims.slice().sort((a,b)=>b.created-a.created);
+ return `<h1>Admin</h1><div class="stats"><div class="stat"><b>${pend.length}</b><span>Pending verifications</span></div><div class="stat"><b>${S.claims.filter(c=>c.state==='open').length}</b><span>Open disputes</span></div><div class="stat"><b>${S.techs.length}</b><span>Verified technicians</span></div><div class="stat"><b>${S.jobs.length}</b><span>Jobs</span></div></div>
+ <section class="block"><h2 style="font-size:20px">Technician verification</h2>${pend.length?`<div class="tablewrap"><table><thead><tr><th>Applicant</th><th>Trade</th><th>Area</th><th>Documents</th><th>Decision</th></tr></thead><tbody>${pend.map(a=>`<tr><td><b>${esc(a.name)}</b><br><small>Submitted ${fmtDate(a.submitted)}</small></td><td>${esc(CATS[a.cat])}</td><td>${esc(a.loc)}</td><td>${esc(a.docs)}</td><td><div class="row"><button class="btn sm primary" type="button" data-act="ver" data-id="${a.id}" data-v="approve">Approve</button><button class="btn sm danger" type="button" data-act="ver" data-id="${a.id}" data-v="reject">Reject</button></div></td></tr>`).join('')}</tbody></table></div>`:'<div class="card flat">No applications waiting.</div>'}
+ ${done.length?`<p class="muted" style="margin-top:10px">Decided: ${done.map(a=>`${esc(a.name)} (${esc(a.state)})`).join(', ')}</p>`:''}</section>
+ <section class="block"><h2 style="font-size:20px">Warranty disputes</h2>${disp.length?`<div class="tablewrap"><table><thead><tr><th>Claim</th><th>Job</th><th>Raised</th><th>Status</th><th>Action</th></tr></thead><tbody>${disp.map(c=>{const w=S.warranties.find(x=>x.id===c.warrantyId);return `<tr><td>${esc(c.reason)}<br><small>${esc(c.by)}</small></td><td>${esc(w?w.title:'')}<br><small>${esc(w&&tech(w.techId)?tech(w.techId).name:'')}</small></td><td>${fmtTS(c.created)}</td><td>${pill(c.state)}</td><td>${c.state==='open'?`<div class="row"><button class="btn sm primary" type="button" data-act="claim" data-id="${c.id}" data-v="resolved">Resolve</button><button class="btn sm danger" type="button" data-act="claim" data-id="${c.id}" data-v="rejected">Reject</button></div>`:'-'}</td></tr>`;}).join('')}</tbody></table></div>`:'<div class="card flat">No disputes.</div>'}</section>
+ <a class="btn" href="#admin-audit">Open audit log</a>`;};
+
+PAGES.adminaudit=()=>`<p><a href="#admin">&larr; Admin</a></p><h1>Audit log</h1><p class="muted">Every key action with time, user and role. Showing the latest ${S.audit.length}.</p>
+<div class="tablewrap"><table><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Detail</th></tr></thead><tbody>${S.audit.map(a=>`<tr><td>${fmtTS(a.ts)}</td><td>${esc(a.email)}</td><td>${esc(a.role)}</td><td><b>${esc(a.action)}</b></td><td>${esc(a.detail)}</td></tr>`).join('')}</tbody></table></div>`;
+PAGES.nf=()=>`<div class="card" style="max-width:520px;margin:30px auto;text-align:center"><h1 style="font-size:28px">Page not found</h1><p class="muted">The page you are looking for does not exist or is not available.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#home">Go to home</a><a class="btn" href="#search">Find a technician</a></div></div>`;
+const denied=msg=>`<div class="card" style="max-width:520px;margin:20px auto"><h1 style="font-size:28px">Access denied</h1><div class="banner bad">${esc(msg)}</div><button class="btn primary" type="button" data-act="back-home">Go back</button></div>`;
+
+/* ---------- render ---------- */
+let lastKey='';
+function render(keep){
+ const y=window.scrollY,[name,arg]=parse(),g=guard(name,arg),u=me();
+ let html;
+ if((name==='login'||name==='register'||name==='forgot')&&u){go(homeOf(u));return;}
+ if(g.login){ui.next=location.hash;html=PAGES.login('Please sign in to continue.');}
+ else if(g.denied){audit('ACCESS_DENIED',`${location.hash||'#'} blocked: ${g.denied}`);html=denied(g.denied);}
+ else if(g.nf)html=PAGES.nf();
+ else html=PAGES[name](arg);
+ $('#topbar').innerHTML=topbar();
+ const full=FULL[name]&&g.ok;
+ $('#app').innerHTML=full?html:`<div class="wrap pagepad">${html}</div>`;
+ if(name==='booking'&&g.ok)bkRender();
+ const key=location.hash;
+ if(keep&&key===lastKey)window.scrollTo(0,y);else{window.scrollTo(0,0);$('#main').focus({preventScroll:true});}
+ lastKey=key;
+ document.title=(({home:'Trusted property technicians in Uganda',login:'Sign in',register:'Create account',forgot:'Reset password',search:'Find a technician',tech:'Technician profile',how:'How it works',plans:'Pricing',about:'About us',help:'Help centre',contact:'Contact us',terms:'Terms of use',privacy:'Privacy policy',pros:'For technicians',booking:'Book a technician',jobs:'My jobs',job:'Job details',pay:'Pay for job',properties:'My properties',technician:'Technician dashboard',admin:'Admin',adminaudit:'Audit log',account:'My account'}[name])||'HomeFix Uganda')+' | HomeFix Uganda';
+}
+
+/* ---------- actions ---------- */
+const ACTS={
+ skip(){$('#main').focus();},
+ 'join-tech'(){ui.regRole='technician';go('register');},
+ 'plan-guest'(){ui.regRole='customer';go('register');},
+ cat(el){ui.filters={cat:el.dataset.cat,loc:'',min:'0',ptype:''};go('search');},
+ 'reset-filters'(){ui.filters={cat:'',loc:'',min:'0',ptype:''};render(true);},
+ quote(el){const u=me();if(!u){ui.pendingTech=el.dataset.id;ui.regRole='customer';go('register');toast('Create a free account to request a quote.');return;}
+  if(u.role!=='customer'){toast('Only customer accounts can book.','bad');audit('ACCESS_DENIED','Non-customer tried to start a booking');return;}
+  ui.draft=newDraft(el.dataset.id);go('booking');},
+ 'new-booking'(){ui.draft=newDraft('');go('booking');},
+ 'bk-back'(){ui.draft.step--;bkRender();},
+ fill(el){$('#email').value=el.dataset.email;$('#password').value='Demo@123';$('#password').focus();},
+ logout(){audit('LOGOUT','');S.session=null;save();ui.draft=null;go('home');toast('Signed out.');},
+ reset(){S=seed();save();ui.draft=null;ui.next=null;ui.filters={cat:'',loc:'',min:'0',ptype:''};ui.prop='p1';go('home');render(false);toast('Demo data reset.','good');},
+ 'back-home'(){const u=me();go(u?homeOf(u):'home');},
+ prop(el){ui.prop=el.dataset.id;render(true);},
+ plan(el){const u=me();if(u.role!=='customer')return;u.plan=el.dataset.id;audit('PLAN_SELECTED',el.dataset.id);save();render(true);toast('Plan set to '+el.dataset.id+' (simulated).','good');},
+ premium(){audit('PREMIUM_WAITLIST','Technician joined waitlist');toast('You are on the Premium waitlist (simulated).','good');},
+ 'job-approve'(el){const j=ownedJob(el.dataset.id,'customer');if(!j||j.status!=='quoted')return;j.status='approved';audit('QUOTE_APPROVED',`Job ${j.id} ${UGX(total(j))}`);save();render(true);toast('Quote approved. The technician can start work.','good');},
+ 'job-decline'(el){const j=ownedJob(el.dataset.id,'customer');if(!j||j.status!=='quoted')return;j.status='declined';audit('QUOTE_DECLINED','Job '+j.id);save();render(true);toast('Quote declined.');},
+ 'job-start'(el){const j=ownedJob(el.dataset.id,'technician');if(!j||j.status!=='approved')return;j.status='in_progress';audit('JOB_STARTED','Job '+j.id);save();render(true);toast('Job started.','good');},
+ 'job-complete'(el){const j=ownedJob(el.dataset.id,'technician');if(!j||j.status!=='in_progress')return;j.status='completed';j.completedAt=todayISO();const t=tech(j.techId);if(t)t.jobs++;audit('JOB_COMPLETED','Job '+j.id);save();render(true);toast('Job marked completed. The customer can now pay.','good');},
+ ver(el){const u=me();if(!u||u.role!=='admin')return;const a=S.applicants.find(x=>x.id===el.dataset.id);if(!a||a.state!=='pending')return;
+  if(el.dataset.v==='approve'){a.state='approved';const lt=a.techId&&tech(a.techId);if(lt)lt.status='verified';else S.techs.push({id:'t'+(S.techs.length+1+Math.floor(Math.random()*90)),name:a.name,cat:a.cat,loc:a.loc,area:a.loc,rating:0,jobs:0,cert:false,skills:[CATS[a.cat]],today:false,bio:'New verified technician on HomeFix.',status:'verified',serves:PTYPES.slice(0,4)});toast(a.name+' approved and listed.','good');}
+  else{a.state='rejected';const lr=a.techId&&tech(a.techId);if(lr)lr.status='rejected';toast(a.name+' rejected.');}
+  audit('VERIFICATION_'+a.state.toUpperCase(),a.name);save();render(true);},
+ claim(el){const u=me();if(!u||u.role!=='admin')return;const c=S.claims.find(x=>x.id===el.dataset.id);if(!c||c.state!=='open')return;c.state=el.dataset.v;audit('CLAIM_'+c.state.toUpperCase(),'Claim '+c.id);save();render(true);toast('Claim '+c.state+'.','good');}
+};
+function onField(e){const el=e.target;
+ if(el.name==='role'&&el.form&&el.form.dataset.form==='register'){const tf=$('#tech-fields');if(tf)tf.hidden=el.value!=='technician';return;}
+ if(el.dataset&&el.dataset.filter){ui.filters[el.dataset.filter]=el.value;const r=$('#results');if(r)r.innerHTML=resultsHTML();return;}
+ if(el.dataset&&el.dataset.draft&&ui.draft){const k=el.dataset.draft;
+  if(el.type==='file')ui.draft[k]=el.files&&el.files[0]?el.files[0].name:'';
+  else if(el.type==='radio'){if(el.checked)ui.draft[k]=el.value;}
+  else ui.draft[k]=el.value;
+  if(e.type==='change'){
+   if(k==='cat'){ui.draft.techId='';bkRender();}
+   else if(k==='recur')bkRender();
+   else if(k==='photo')bkRender();
+  }}
+}
+function afterAuth(u,msg){S.session=u.id;save();toast(msg,'good');
+ if(ui.pendingTech&&u.role==='customer'){ui.draft=newDraft(ui.pendingTech);ui.pendingTech=null;go('booking');return;}
+ const nx=ui.next;ui.next=null;
+ if(nx&&!/^#(login|register|forgot)?$/.test(nx)){location.hash=nx.replace(/^#/,'');if(!guard(...parse()).ok)go(homeOf(u));render(false);}else go(homeOf(u));}
+const FORMS={
+ hero(f){const d=fd(f);ui.filters={cat:d.cat||'',loc:d.loc||'',min:'0',ptype:''};go('search');},
+ register(f){const d=fd(f),e={},em=(d.remail||'').trim().toLowerCase(),role=d.role==='technician'?'technician':'customer';
+  if(!d.rname||d.rname.trim().length<2)e.rname='Enter your full name.';
+  if(!em)e.remail='Enter your email.';else if(!EMAIL.test(em))e.remail='Enter a valid email like name@example.com.';
+  else if(S.users.some(u=>u.email===em))e.remail='An account with this email already exists. Sign in instead.';
+  if(!okPhone(d.rphone||''))e.rphone='Enter a phone number like +256 772 000 111.';
+  if(!d.rpass||d.rpass.length<8||!/[A-Za-z]/.test(d.rpass)||!/\d/.test(d.rpass))e.rpass='Use at least 8 characters with a letter and a number.';
+  if(d.rpass2!==d.rpass)e.rpass2='Passwords do not match.';
+  if(!d.terms)e.terms='Please accept the terms and privacy policy.';
+  if(showErrs(f,e))return;
+  const u={id:uid('u'),email:em,name:d.rname.trim(),phone:d.rphone.trim(),role,hash:pwHash(em,d.rpass)};
+  if(role==='customer')u.plan='QuickFix';
+  else{const tid=uid('t');u.techId=tid;S.techs.push({id:tid,name:u.name,cat:d.rtrade,loc:d.rcity,area:d.rcity,rating:0,jobs:0,cert:false,skills:[CATS[d.rtrade]],today:false,bio:'New technician on HomeFix.',status:'pending',serves:PTYPES.slice(0,4)});
+   S.applicants.push({id:uid('a'),techId:tid,name:u.name,cat:d.rtrade,loc:d.rcity,docs:'Documents (not collected in prototype)',submitted:todayISO(),state:'pending'});}
+  S.users.push(u);S.session=u.id;audit('REGISTER',role+' '+em);ui.regRole=null;
+  afterAuth(u,role==='customer'?'Account created. Welcome to HomeFix.':'Account created. Your profile is pending verification.');},
+ forgot(f){const d=fd(f),e={};if(!d.femail.trim())e.femail='Enter your email.';else if(!EMAIL.test(d.femail.trim()))e.femail='Enter a valid email like name@example.com.';
+  if(showErrs(f,e))return;audit('PASSWORD_RESET_REQUESTED',d.femail.trim());
+  $('#forgot-box').innerHTML='<h1 style="font-size:28px">Check your email</h1><p class="muted">If an account exists for that address, a reset link has been sent. This is simulated in the prototype, so no email is sent.</p><a class="btn primary" href="#login">Back to sign in</a>';},
+ contact(f){const d=fd(f),e={};if(!d.cname.trim())e.cname='Enter your name.';
+  if(!d.cemail.trim())e.cemail='Enter your email.';else if(!EMAIL.test(d.cemail.trim()))e.cemail='Enter a valid email like name@example.com.';
+  if(!d.ctopic)e.ctopic='Choose a topic.';if(d.cmsg.trim().length<10)e.cmsg='Write at least 10 characters.';
+  if(showErrs(f,e))return;audit('CONTACT_MESSAGE',d.ctopic);
+  $('#contact-box').innerHTML='<h2 style="font-size:22px">Message sent</h2><p class="muted">Thank you, '+esc(d.cname.trim())+'. Our team replies within one working day. This is simulated in the prototype.</p><a class="btn" href="#home">Back to home</a>';},
+ account(f){const u=me(),d=fd(f),e={};if(d.aname.trim().length<2)e.aname='Enter your full name.';
+  if(d.aphone.trim()&&!okPhone(d.aphone))e.aphone='Enter a phone number like +256 772 000 111.';
+  if(showErrs(f,e))return;u.name=d.aname.trim();u.phone=d.aphone.trim();
+  if(u.techId&&tech(u.techId))tech(u.techId).name=u.name;audit('ACCOUNT_UPDATED','');save();render(true);toast('Profile saved.','good');},
+ addprop(f){const u=me(),d=fd(f),e={};if(d.pname.trim().length<3)e.pname='Enter a property name (at least 3 characters).';
+  if(d.parea.trim().length<2)e.parea='Enter the area or neighbourhood.';
+  if(showErrs(f,e))return;const p={id:uid('p'),owner:u.id,name:d.pname.trim(),type:d.ptype,address:d.parea.trim()+', '+d.pcity};
+  S.props.push(p);ui.prop=p.id;audit('PROPERTY_ADDED',p.name);save();
+  if(ui.draft){ui.draft.propId=p.id;toast('Property added. Continue your booking.','good');go('booking');}else{render(true);toast('Property added.','good');}},
+ login(f){const d=fd(f),e={};
+  if(!d.email.trim())e.email='Enter your email.';else if(!EMAIL.test(d.email.trim()))e.email='Enter a valid email like name@example.com.';
+  if(!d.password)e.password='Enter your password.';
+  if(showErrs(f,e))return;
+  const u=S.users.find(x=>x.email===d.email.trim().toLowerCase());
+  if(!u||u.hash!==pwHash(u.email,d.password)){showErrs(f,{password:'Email or password is incorrect.'});audit('LOGIN_FAILED',d.email.trim());return;}
+  S.session=u.id;audit('LOGIN',u.role);afterAuth(u,'Welcome back, '+u.name.split(' ')[0]+'.');
+ },
+ bk(f){const d=ui.draft,e=bkValidate();if(showErrs(f,e))return;
+  if(d.step<6){d.step++;bkRender();window.scrollTo(0,0);return;}
+  const u=me(),j={id:uid('j'),custId:u.id,techId:d.techId,propId:d.propId,cat:d.cat,title:d.desc.trim().slice(0,60),desc:d.desc.trim(),recurring:d.recur==='recurring'?{freq:d.freq}:null,photo:d.photo,date:d.date,time:d.time,phone:d.phone.trim(),status:'requested',quote:null,paid:false,receipt:null,review:false,created:Date.now()};
+  S.jobs.push(j);audit('BOOKING_CREATED',`Job ${j.id} with ${tech(j.techId).name}`);save();ui.draft=null;toast('Booking sent. The technician will send a quote.','good');go('job-'+j.id);},
+ quote(f){const j=ownedJob(f.dataset.id,'technician');if(!j)return;const d=fd(f),e={};
+  const l=Number(d.labour),m=Number(d.materials);
+  if(!d.labour||!(l>0))e.labour='Enter a labour amount above 0 UGX.';
+  if(d.materials===''||!(m>=0))e.materials='Enter materials cost, or 0 if none.';
+  if(d.note.trim().length<5)e.note='Describe what the quote covers (at least 5 characters).';
+  if(showErrs(f,e))return;
+  j.quote={labour:Math.round(l),materials:Math.round(m),note:d.note.trim()};j.status='quoted';audit('QUOTE_SENT',`Job ${j.id} ${UGX(total(j))}`);save();render(true);toast('Quotation sent to the customer.','good');},
+ chat(f){const j=job(f.dataset.id),u=me(),d=fd(f);if(!j)return;
+  if(!d.msg.trim()){showErrs(f,{msg:'Type a message first.'});return;}
+  (S.chat[j.id]=S.chat[j.id]||[]).push({role:u.role,name:u.name,text:d.msg.trim(),ts:Date.now()});audit('MESSAGE',`Job ${j.id}`);save();
+  const box=$('#chat');box.innerHTML=chatHTML(j);box.scrollTop=box.scrollHeight;f.reset();
+  const other=u.role==='customer'?{role:'technician',name:(tech(j.techId)||{}).name||'Technician',text:'Thanks, noted. I will confirm shortly. (demo auto-reply)'}:u.role==='technician'?{role:'customer',name:(user(j.custId)||{}).name||'Customer',text:'Thank you. (demo auto-reply)'}:null;
+  if(other)setTimeout(()=>{S.chat[j.id].push(Object.assign(other,{ts:Date.now()}));save();const b=$('#chat');if(b&&location.hash==='#job-'+j.id){b.innerHTML=chatHTML(j);b.scrollTop=b.scrollHeight;}},1200);},
+ pay(f,ev){const j=ownedJob(f.dataset.id,'customer');if(!j||j.status!=='completed'||j.paid)return;const d=fd(f),e={};
+  const res=(ev&&ev.submitter&&ev.submitter.value)||'ok';
+  if(!okPhone(d.phone||''))e.phone='Enter a number like +256 772 000 111.';
+  if(showErrs(f,e))return;
+  if(res==='fail'){audit('PAYMENT_FAILED',`Job ${j.id} ${d.method}`);showErrs(f,{pay:'Sandbox: payment declined. No money moved. Try again.'});return;}
+  const amt=total(j),ph=d.phone.trim().replace(/\s/g,'');
+  j.paid=true;j.receipt={id:'RCT-'+Math.floor(10000+Math.random()*89999),method:d.method,phone:ph.slice(0,6)+'x xxx '+ph.slice(-3),amount:amt,fee:Math.round(amt*FEE),ts:Date.now()};
+  S.warranties.push({id:uid('w'),jobId:j.id,propId:j.propId,techId:j.techId,title:j.title,start:todayISO(),end:addDays(90)});
+  audit('PAYMENT_SUCCESS',`Job ${j.id} ${UGX(amt)} via ${d.method}`);save();toast('Sandbox payment successful. Receipt and warranty created.','good');go('job-'+j.id);},
+ review(f){const j=ownedJob(f.dataset.id,'customer');if(!j||!j.paid||j.review)return;const d=fd(f),e={};
+  if(!d.rating)e.rating='Choose a star rating.';if(d.comment.trim().length<5)e.comment='Write at least 5 characters.';
+  if(showErrs(f,e))return;
+  const t=tech(j.techId),r=Number(d.rating);t.rating=Math.round(((t.rating*t.jobs+r)/(t.jobs+1))*10)/10;
+  S.reviews.push({id:uid('r'),techId:t.id,name:me().name,rating:r,comment:d.comment.trim(),date:todayISO()});j.review=true;audit('REVIEW_POSTED',`Job ${j.id} ${r} stars`);save();render(true);toast('Thanks for your review.','good');},
+ claim(f){const d=fd(f),e={};if(!d.warrantyId)e.warrantyId='Choose a warranty.';if(d.reason.trim().length<10)e.reason='Describe the problem in at least 10 characters.';
+  if(showErrs(f,e))return;
+  S.claims.push({id:uid('c'),warrantyId:d.warrantyId,by:me().name,reason:d.reason.trim(),created:Date.now(),state:'open'});audit('CLAIM_FILED','Warranty '+d.warrantyId);save();render(true);toast('Claim submitted. HomeFix will review it.','good');}
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;const a=ACTS[el.dataset.act];if(a){if(el.tagName==='A')e.preventDefault();a(el,e);}});
+document.addEventListener('submit',e=>{const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();FORMS[f.dataset.form](f,e);});
+document.addEventListener('input',onField);document.addEventListener('change',onField);
+window.addEventListener('hashchange',()=>render(false));
+$('#skip').addEventListener('click',ACTS.skip);
+render(false);
+})();
+</script>
+</body>
+</html>
